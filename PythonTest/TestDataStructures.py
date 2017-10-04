@@ -134,3 +134,12 @@ print ('bric.issuperset(bri)', bric.issuperset(bri))
 print ('bri.issuperset(bric)', bri.issuperset(bric))
 print ('bri.issubset(bric)', bri.issubset(bric))
 
+
+
+delimiter = "_"
+print (delimiter.join(shoplist))
+
+
+
+
+
