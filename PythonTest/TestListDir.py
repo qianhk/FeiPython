@@ -1,7 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding=utf-8
 
 import os
+import sys
+
+print ('Python info: {}'.format(sys.version))
 
 # 获取当前目录中所有的apk源包
 src_apks = []
