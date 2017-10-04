@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 # coding=utf-8
+# encoding=utf-8
 
+import pickle
+import io
+import sys
+
+print ('sys.getdefaultencoding()', sys.getdefaultencoding())
+reload(sys)
+sys.setdefaultencoding('utf-8')
+print ('sys.getdefaultencoding()', sys.getdefaultencoding())
 
 class Person:
 
@@ -74,7 +83,30 @@ p2.die()
 Person.how_maney()
 
 
+personFile = 'person.data'
+f = open(personFile, 'wb')
+pickle.dump(student, f)
+f.close()
 
+del student
+
+f = open(personFile, 'rb')
+student = pickle.load(f)
+print ('new student', student)
+student.say_hi()
+
+unicodeFile = 'unicodeText.data'
+f = open(unicodeFile, 'wt')
+f.write("好人一生平安,此乃中文chinese text")
+f.close()
+
+unicodeFile = 'unicodeText2.data'
+with open(unicodeFile, 'wt') as f:
+    f.write(u"好人一生平安,此乃中文chinese text")
+# f.close()
+
+# f = io.open(unicodeFile, 'rt')
+# f.read
 
 
 
