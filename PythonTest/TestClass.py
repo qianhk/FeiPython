@@ -30,8 +30,24 @@ class Person:
         else:
             print ('There still ', Person.personCount)
 
+    def __del__(self):
+        print ('{} is being __del__'.format(self.name))
+
+    def __str__(self):
+        return '__str__{}'.format(self.name)
+
     def say_hi(self):
         print ('Hello {}, how are you?'.format(self.name))
+
+    def __len__(self):
+        return len(self.name)
+
+    def __getitem__(self, item):
+        print ('type(item)', type(item))
+        if item == 'two':
+            return self.name[2]
+        else:
+            return self.name[item]
 
     @classmethod
     def how_maney(cls):
@@ -59,6 +75,12 @@ class Student(Person):
         Person.say_hi(self)
         print ('score', self.score)
 
+    def __str__(self):
+        return '{} {}'.format(Person.__str__(self), self.score)
+
+    def __lt__(self, other):
+        return self.score < other.score
+
 
 p = Person('KaiKai')
 p.say_hi()
@@ -70,11 +92,22 @@ p2.say_hi()
 print ('p2.name', p2.name)
 # print ('p2.__age', p2.__age)
 
-teacher = Teacher('Teacher', 18888)
+teacher = Teacher('Teacher_Kai', 18888)
 teacher.say_hi()
 
-student = Student('Student', 100)
+student = Student('Student_Kai', 105)
 student.say_hi()
+
+student2 = Student('Student_Kai', 102)
+student2.say_hi()
+
+print ('student < student2', student < student2)
+
+print ('len(student)', len(student))
+
+print ('student[2]', student[2], 'student[5]', student[5])
+
+print ('student[\'two\']', student['two'])
 
 Person.how_maney()
 
@@ -88,11 +121,13 @@ f = open(personFile, 'wb')
 pickle.dump(student, f)
 f.close()
 
+print ('new student {}'.format(student))
+
 del student
 
 f = open(personFile, 'rb')
 student = pickle.load(f)
-print ('new student', student)
+print ('new student2 {}'.format(student))
 student.say_hi()
 
 unicodeFile = 'unicodeText.data'
