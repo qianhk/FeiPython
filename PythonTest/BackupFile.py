@@ -1,24 +1,46 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import sys
 import os
 import time
 
+print ('Python info: {}'.format(sys.version))
+
+# def mkdir_p(path):
+#     try:
+#         os.makedirs(path)
+#     except OSError as exc: # Python >2.5 (except OSError, exc: for Python <2.5)
+#         if exc.errno == errno.EEXIST and os.path.isdir(path):
+#             pass
+#         else: raise
+
+
+
 source = ['/PGeneral']
 targetDir = '/Bak/backupPython'
-target = targetDir + os.sep + time.strftime('%Y%m%d%H%M%S') + '.zip'
+today = targetDir + os.sep + time.strftime('%Y%m%d')
 
-if not os.path.exists(targetDir):
-    os.mkdir(targetDir)
+try:
+    comment = raw_input('Enter a comment -->')
+except NameError as error:
+    comment = input('Enter a comment -->')
+
+now = time.strftime('%H%M%S')
+if len(comment) == 0:
+    target = today + os.sep + now + '.zip'
+else:
+    target = today + os.sep + now + '_' + comment.replace(' ', '_') + '.zip'
+
+if not os.path.exists(today):
+    os.makedirs(today)
 
 zipCommand = 'zip -r {0} {1}'.format(target, ' '.join(source))
 
 print ('zip command is: ')
-print zipCommand
+print (zipCommand)
 
 if os.system(zipCommand) == 0:
     print ('Successful back to', target)
 else:
     print ('Backup Failed')
-
-
