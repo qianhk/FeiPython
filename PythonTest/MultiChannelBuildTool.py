@@ -53,7 +53,7 @@ for src_apk in src_apks:
         # zip获取新建立的apk文件
         zipped = zipfile.ZipFile(target_apk, 'a', zipfile.ZIP_DEFLATED)
         # 初始化渠道信息
-        empty_channel_file = "META-INF/ydzConfig_{channel}".format(channel = target_channel)
+        empty_channel_file = "META-INF/ydzConfig_{}".format(target_channel)
         # 写入渠道信息
         zipped.write(src_empty_file, empty_channel_file)
         # 关闭zip流

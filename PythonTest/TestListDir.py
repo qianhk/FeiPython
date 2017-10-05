@@ -11,7 +11,8 @@ src_apks = []
 # python3 : os.listdir()即可，这里使用兼容Python2的os.listdir('.')
 for file in os.listdir('.'):
     if os.path.isfile(file):
-        extension = os.path.splitext(file)[1][1:]
+        splitext = os.path.splitext(file) # splitext是分割名称和扩展名 split分割路径最后一段和前面的
+        extension = splitext[1][1:]
         logTxt = "file={} extension={}".format(file, extension)
         print(logTxt)
         if extension == 'apk':
