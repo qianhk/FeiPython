@@ -41,7 +41,8 @@ def baidu_zhihu(url):
 
     print ('page_data', page_data)
 
-    page_image_pattern = re.compile(r'<img src="(https://.*?\.jpg)"')
+    # page_image_pattern = re.compile(r'<img src="(https://.*?\.jpg)"')
+    page_image_pattern = re.compile(r'src="(https://\S*?\.jp[e]?g)"')
     find_all_image_url = page_image_pattern.findall(page_data)
     print ('total image url find ', len(find_all_image_url))
 
@@ -68,5 +69,6 @@ def baidu_zhihu(url):
 
 
 if __name__ == "__main__":
-    url = "https://www.zhihu.com/question/35874887"
+    # url = "https://www.zhihu.com/question/35874887"
+    url = "https://www.zhihu.com/question/34078228"
     baidu_zhihu(url)
