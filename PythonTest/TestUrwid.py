@@ -11,12 +11,9 @@ def show_or_exit(key):
 
 
 palette = [
-    ('banner', '', '', '', '#ffa', '#60d')
-    , ('streak', '', '', '', 'g50', '#60a')
-    , ('inside', '', '', '', 'g38', '#808')
-    , ('outside', '', '', '', 'g27', '#a06')
-    , ('bg', '', '', '', 'g7', '#d06')
-]
+    ('banner', 'black', 'light gray'),
+    ('streak', 'black', 'dark red'),
+    ('bg', 'black', 'dark blue'), ]
 
 txt = urwid.Text(('banner', 'Hello World'), align='center')
 map1 = urwid.AttrMap(txt, 'streak')
