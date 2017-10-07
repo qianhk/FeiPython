@@ -59,5 +59,5 @@ def showMenuWithTitleAndList(title, list):
     try:
         loop.run()
     except KeyboardInterrupt as e:
-        print ('KeyboardInterrupt', e)
+        print ('Operation cancelled by user')
 
