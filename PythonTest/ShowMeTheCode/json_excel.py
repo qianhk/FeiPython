@@ -10,21 +10,19 @@ sheetname = 'student'
 
 
 def json_to_excel():
-    info = get_json(testfile)
+    studentList = get_json(testfile)
     workbook = xlwt.Workbook(encoding='utf-8')
     workbook.set_owner('KaiFromPython')
     sheet = workbook.add_sheet(sheetname)
 
-    row_total = len(info)
-    info1 = info[str(1)]
-    col_total = len(info1)
-    # The keys of dict is special, so we just use 1, 2, 3
-    for r in range(row_total):
-        sheet.write(r, 0, r + 1)
-        for c in range(col_total):
-            # Get values by the key
-            vals = info[str(r + 1)]
-            sheet.write(r, c + 1, vals[c])
+    index = 0
+    for stu in studentList:
+        sheet.write(index, 0, stu['stu_no'])
+        sheet.write(index, 1, stu['stu_name'])
+        sheet.write(index, 2, stu['chinese'])
+        sheet.write(index, 3, stu['math'])
+        sheet.write(index, 4, stu['english'])
+        index += 1
 
     workbook.save(savename)
 
@@ -39,3 +37,4 @@ def get_json(testfile):
 
 if __name__ == '__main__':
     json_to_excel()
+
