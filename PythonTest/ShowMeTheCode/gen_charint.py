@@ -16,7 +16,7 @@ def gen_charint(filename, width = 4, num = 200):
 
 if __name__ == '__main__':
 
-    filename = 'result.txt'
+    filename = '../cache/result.txt'
     width = 8
     num = 200
     gen_charint(filename, width, num)
