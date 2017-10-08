@@ -10,7 +10,7 @@ import sys
 print (platform.platform())
 
 loggingFile = sys.argv[0]
-loggingFile = os.path.join(os.path.dirname(loggingFile), "test.log")
+loggingFile = os.path.join(os.path.dirname(loggingFile), "./cache/test.log")
 print ('Logging to', loggingFile)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s : %(levelname)s : %(message)s', filename=loggingFile, filemode='w',)
