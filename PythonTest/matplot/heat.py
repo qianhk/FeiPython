@@ -33,8 +33,12 @@ import numpy as np
 # plt.plot(T, 1. - np.sin(T), color="r")
 
 #面积2000，求周长最短 均值不等式 a+b≥2√(a*b)
-X = np.linspace(30, 70, 10000)  # a==b且a44.72 周长最短
-Y = 2000.0 / X  + X
+# X = np.linspace(30, 70, 10000)  # a==b且a44.72 周长最短
+# Y = 2000.0 / X  + X
+# plt.plot(X, Y)
+
+X = np.linspace(-10, 10, 100)
+Y = np.power(X, -0.5)
 plt.plot(X, Y)
 
 plt.show()
