@@ -3,16 +3,21 @@
 
 import tensorflow as tf
 
-sess = tf.Session()
+with tf.device('/cpu:0'):
 
-hello = tf.constant('Hello, TensorFlow!')
-print(sess.run(hello))
+    sess = tf.Session()
 
-a = tf.constant(10)
-b = tf.constant(32)
-print(sess.run(a + b))
+    # a_gpu = tf.Variable(0, name="a_gup")
+    # sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
 
-c = tf.constant('haHa')
-print(sess.run(c))
+    hello = tf.constant('Hello, TensorFlow!')
+    print(sess.run(hello))
 
-sess.close()
+    a = tf.constant(10)
+    b = tf.constant(32)
+    print(sess.run(a + b))
+
+    c = tf.constant('haHa')
+    print(sess.run(c))
+
+    sess.close()
