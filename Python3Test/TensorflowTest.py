@@ -45,10 +45,10 @@ print('\nD=')
 print(sess.run(D))
 
 print('\nA+B=')
-print(sess.run(A+B))
+print(sess.run(A + B))
 
 print('\nB-B=')
-print(sess.run(B-B))
+print(sess.run(B - B))
 
 print('\nB*I=')
 BI = tf.matmul(B, identity_matrix)
@@ -71,9 +71,21 @@ print(sess.run(tf.cholesky(identity_matrix)))
 print('\nselfAdjointEig(D):')
 print(sess.run(tf.self_adjoint_eig(D)))
 
+print(sess.run(tf.div(13, 4)))
+print(sess.run(tf.truediv(13, 4)))
+print(sess.run(tf.floordiv(13, 4)))
+print(sess.run(tf.mod(13.2, 4)))
+
+print(sess.run(tf.cross([1, 0, 0], [0, 1, 0])))
+print(sess.run(tf.square([1, 2, 3])))
+
+
+def custom_polynomial(local_tf, value):
+    return local_tf.subtract(3 * local_tf.square(value), value) + 10
+
+
+print((sess.run(custom_polynomial(tf, 11))))
 
 sess.close()
 
-
-
-
+print(13 / 4)
