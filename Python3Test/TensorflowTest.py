@@ -32,6 +32,8 @@ D = tf.convert_to_tensor(np.array([[1., 2., 3.], [-3., -7., -1.], [0., 5., -2.]]
 sess = tf.Session()
 # sess.run(tf.global_variables_initializer())
 
+# print(sess.run(tf.random_normal(mean=10, shape=[10])))
+
 print('\nI=')
 print(sess.run(identity_matrix))
 print('\nA=')
