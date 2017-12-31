@@ -97,5 +97,5 @@ for i in range(100):
 
 plt.plot(range(0, 100, 5), loss_stochastic, 'b-', label='Stochastic Loss')
 plt.plot(range(0, 100, 5), loss_batch, 'r--', label='Batch Loss, size=20')
-plt.legend(loc='upper right', prop={'size': 11})
+plt.legend(loc='upper right', prop={'size': 10})
 plt.show()

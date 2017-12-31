@@ -34,6 +34,10 @@ sess = tf.Session()
 
 # print(sess.run(tf.random_normal(mean=10, shape=[10])))
 
+# A = tf.Variable(tf.random_normal(shape=[1, 1]))
+# sess.run(tf.global_variables_initializer())
+# print(sess.run(A))
+
 print('\nI=')
 print(sess.run(identity_matrix))
 print('\nA=')
