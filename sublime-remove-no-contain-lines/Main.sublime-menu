@@ -1,0 +1,8 @@
+[{
+    "id": "edit",
+    "children": [{
+        "caption": "Remove No Contain Lines",
+        "id": "remove_no_contain_lines",
+        "command": "remove_no_contain_lines"
+    }]
+}]
