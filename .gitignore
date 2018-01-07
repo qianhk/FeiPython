@@ -107,3 +107,6 @@ ENV/
 my test cache
 cache/
 logs/
+
+*debug*
+
