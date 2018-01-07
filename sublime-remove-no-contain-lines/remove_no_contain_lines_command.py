@@ -38,21 +38,15 @@ class RemoveNoContainLinesTextCommand(sublime_plugin.TextCommand):
 class RemoveNoContainLinesCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        # window = sublime.active_window()
-        # self.tmpEdit = edit
         self.window.show_input_panel('请输入需包含的字符串', '', self.on_done, None, self.on_cancel)
         # print('after show_input_panel')
 
     def on_cancel(self):
-        self.edit_token = None
-        self.args = None
         sublime.status_message('cancel operation')
 
-    def on_done(self, input):
-        # self.view.insert(edit, 0, "Hello, World2!")
-        # allAbc = self.view.find_all('Abc')
-        if len(input) == 0:
+    def on_done(self, user_input):
+        if len(user_input) == 0:
             sublime.status_message('没有输入，取消操作')
             return
         view = self.window.active_view()
-        view.run_command('remove_no_contain_lines_text', {'keep_word': input})
+        view.run_command('remove_no_contain_lines_text', {'keep_word': user_input})
