@@ -63,6 +63,9 @@ print('\nOver\n')
 # If sigmoid(x+A) < 0.5 -> 0 else 1
 # Theoretically, A should be -(mean1 + mean2)/2
 
+# writer = tf.summary.FileWriter("../logs/boardTest", tf.get_default_graph())
+# writer.close()
+
 ops.reset_default_graph()
 
 # Create graph

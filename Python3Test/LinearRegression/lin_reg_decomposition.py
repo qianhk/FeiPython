@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
-# Linear Regression: Inverse Matrix Method
+# Linear Regression: Decomposition Method
 # ----------------------------------
 #
 # This function shows how to use TensorFlow to
 # solve linear regression via the matrix inverse.
 #
-# Given Ax=b, solving for x:
-#  x = (t(A) * A)^(-1) * t(A) * b
-#  where t(A) is the transpose of A
+# Given Ax=b, and a Cholesky decomposition such that
+#  A = L*L' then we can get solve for x via
+# 1) L*y=t(A)*b
+# 2) L'*x=y
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,14 +23,12 @@ ops.reset_default_graph()
 sess = tf.Session()
 
 # Create the data
-x_vals = np.linspace(0, 10, 11)
-y_vals = x_vals + np.random.normal(0, 0.5, 11)
+x_vals = np.linspace(0, 10, 100)
+y_vals = x_vals + np.random.normal(0, 0.5, 100)
 
 # Create design matrix
-matrixXVals = np.matrix(x_vals)
-x_vals_column = np.transpose(matrixXVals)
-repeat1_11 = np.repeat(1, 11)
-ones_column = np.transpose(np.matrix(repeat1_11))
+x_vals_column = np.transpose(np.matrix(x_vals))
+ones_column = np.transpose(np.matrix(np.repeat(1, 100)))
 A = np.column_stack((x_vals_column, ones_column))
 
 # Create b matrix
@@ -39,13 +38,18 @@ b = np.transpose(np.matrix(y_vals))
 A_tensor = tf.constant(A)
 b_tensor = tf.constant(b)
 
-# Matrix inverse solution
+# Find Cholesky Decomposition
 tA_A = tf.matmul(tf.transpose(A_tensor), A_tensor)
-tA_A_inv = tf.matrix_inverse(tA_A)
-product = tf.matmul(tA_A_inv, tf.transpose(A_tensor))
-solution = tf.matmul(product, b_tensor)
+L = tf.cholesky(tA_A)
 
-solution_eval = sess.run(solution)
+# Solve L*y=t(A)*b
+tA_b = tf.matmul(tf.transpose(A_tensor), b)
+sol1 = tf.matrix_solve(L, tA_b)
+
+# Solve L' * y = sol1
+sol2 = tf.matrix_solve(tf.transpose(L), sol1)
+
+solution_eval = sess.run(sol2)
 
 # Extract coefficients
 slope = solution_eval[0][0]
