@@ -13,10 +13,7 @@ print(np.random.normal(3, 1, 50))
 
 print(np.repeat(3, 50))
 
-print()
-print(sys.version)
-print()
-print(sys.version_info)
+print('\nsys.version=%s\n\nsys.version_info=%s' % (sys.version, sys.version_info))
 
 # print('DYLD_LIBRARY_PATH=')
 # print(os.environ['DYLD_LIBRARY_PATH'])
