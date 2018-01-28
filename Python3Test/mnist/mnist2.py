@@ -26,9 +26,6 @@ apply gradients.
 This file is used by the various "fully_connected_*.py" files and not meant to
 be run.
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import math
 
@@ -53,6 +50,9 @@ def inference(images, hidden1_units, hidden2_units):
     Returns:
       softmax_linear: Output tensor with the computed logits.
     """
+
+    print('before inference by kai')
+
     # Hidden 1
     with tf.name_scope('hidden1'):
         weights = tf.Variable(

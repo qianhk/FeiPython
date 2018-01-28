@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +17,6 @@
 # ==============================================================================
 
 """Trains and Evaluates the MNIST network using a feed dictionary."""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 # pylint: disable=missing-docstring
 import argparse
@@ -28,7 +28,7 @@ from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 
 from tensorflow.examples.tutorials.mnist import input_data
-from tensorflow.examples.tutorials.mnist import mnist
+import mnist.mnist2 as mnist2
 
 # Basic model parameters as external flags.
 FLAGS = None
@@ -50,8 +50,7 @@ def placeholder_inputs(batch_size):
     # Note that the shapes of the placeholders match the shapes of the full
     # image and label tensors, except the first dimension is now batch_size
     # rather than the full size of the train or test data sets.
-    images_placeholder = tf.placeholder(tf.float32, shape=(batch_size,
-                                                           mnist.IMAGE_PIXELS))
+    images_placeholder = tf.placeholder(tf.float32, shape=(batch_size, mnist2.IMAGE_PIXELS))
     labels_placeholder = tf.placeholder(tf.int32, shape=(batch_size))
     return images_placeholder, labels_placeholder
 
@@ -75,8 +74,7 @@ def fill_feed_dict(data_set, images_pl, labels_pl):
     """
     # Create the feed_dict for the placeholders filled with the next
     # `batch size` examples.
-    images_feed, labels_feed = data_set.next_batch(FLAGS.batch_size,
-                                                   FLAGS.fake_data)
+    images_feed, labels_feed = data_set.next_batch(FLAGS.batch_size, FLAGS.fake_data)
     feed_dict = {
         images_pl: images_feed,
         labels_pl: labels_feed,
@@ -104,9 +102,7 @@ def do_eval(sess,
     steps_per_epoch = data_set.num_examples // FLAGS.batch_size
     num_examples = steps_per_epoch * FLAGS.batch_size
     for step in xrange(steps_per_epoch):
-        feed_dict = fill_feed_dict(data_set,
-                                   images_placeholder,
-                                   labels_placeholder)
+        feed_dict = fill_feed_dict(data_set, images_placeholder, labels_placeholder)
         true_count += sess.run(eval_correct, feed_dict=feed_dict)
     precision = float(true_count) / num_examples
     print('  Num examples: %d  Num correct: %d  Precision @ 1: %0.04f' %
@@ -122,22 +118,19 @@ def run_training():
     # Tell TensorFlow that the model will be built into the default Graph.
     with tf.Graph().as_default():
         # Generate placeholders for the images and labels.
-        images_placeholder, labels_placeholder = placeholder_inputs(
-            FLAGS.batch_size)
+        images_placeholder, labels_placeholder = placeholder_inputs(FLAGS.batch_size)
 
         # Build a Graph that computes predictions from the inference model.
-        logits = mnist.inference(images_placeholder,
-                                 FLAGS.hidden1,
-                                 FLAGS.hidden2)
+        logits = mnist2.inference(images_placeholder, FLAGS.hidden1, FLAGS.hidden2)
 
         # Add to the Graph the Ops for loss calculation.
-        loss = mnist.loss(logits, labels_placeholder)
+        loss = mnist2.loss(logits, labels_placeholder)
 
         # Add to the Graph the Ops that calculate and apply gradients.
-        train_op = mnist.training(loss, FLAGS.learning_rate)
+        train_op = mnist2.training(loss, FLAGS.learning_rate)
 
         # Add the Op to compare the logits to the labels during evaluation.
-        eval_correct = mnist.evaluation(logits, labels_placeholder)
+        eval_correct = mnist2.evaluation(logits, labels_placeholder)
 
         # Build the summary Tensor based on the TF collection of Summaries.
         summary = tf.summary.merge_all()
@@ -159,34 +152,32 @@ def run_training():
         # Run the Op to initialize the variables.
         sess.run(init)
 
+        start_time = time.time()
+
         # Start the training loop.
         for step in xrange(FLAGS.max_steps):
-            start_time = time.time()
 
             # Fill a feed dictionary with the actual set of images and labels
             # for this particular training step.
-            feed_dict = fill_feed_dict(data_sets.train,
-                                       images_placeholder,
-                                       labels_placeholder)
+            feed_dict = fill_feed_dict(data_sets.train, images_placeholder, labels_placeholder)
 
             # Run one step of the model.  The return values are the activations
             # from the `train_op` (which is discarded) and the `loss` Op.  To
             # inspect the values of your Ops or variables, you may include them
             # in the list passed to sess.run() and the value tensors will be
             # returned in the tuple from the call.
-            _, loss_value = sess.run([train_op, loss],
-                                     feed_dict=feed_dict)
-
-            duration = time.time() - start_time
+            _, loss_value = sess.run([train_op, loss], feed_dict=feed_dict)
 
             # Write the summaries and print an overview fairly often.
             if step % 100 == 0:
                 # Print status to stdout.
+                duration = time.time() - start_time
                 print('Step %d: loss = %.2f (%.3f sec)' % (step, loss_value, duration))
                 # Update the events file.
                 summary_str = sess.run(summary, feed_dict=feed_dict)
                 summary_writer.add_summary(summary_str, step)
                 summary_writer.flush()
+
 
             # Save a checkpoint and evaluate the model periodically.
             if (step + 1) % 1000 == 0 or (step + 1) == FLAGS.max_steps:
@@ -213,6 +204,9 @@ def run_training():
                         images_placeholder,
                         labels_placeholder,
                         data_sets.test)
+
+            if step % 100 == 0:
+                start_time = time.time()
 
 
 def main(_):
