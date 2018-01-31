@@ -113,7 +113,7 @@ def run_training():
     """Train MNIST for a number of steps."""
     # Get the sets of images and labels for training, validation, and
     # test on MNIST.
-    data_sets = input_data.read_data_sets(FLAGS.input_data_dir, FLAGS.fake_data)
+    data_sets = input_data.read_data_sets(FLAGS.input_data_dir, FLAGS.fake_data, source_url="http://yann.lecun.com/exdb/mnist/")
 
     # Tell TensorFlow that the model will be built into the default Graph.
     with tf.Graph().as_default():
