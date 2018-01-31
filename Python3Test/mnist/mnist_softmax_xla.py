@@ -80,7 +80,7 @@ def main(_):
                      options=tf.RunOptions(trace_level=tf.RunOptions.FULL_TRACE),
                      run_metadata=run_metadata)
             trace = timeline.Timeline(step_stats=run_metadata.step_stats)
-            with open('timeline.ctf.json', 'w') as trace_file:
+            with open('../logs/timeline.ctf.json', 'w') as trace_file:
                 trace_file.write(trace.generate_chrome_trace_format())
         else:
             sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_dir',
         type=str,
-        default='/tmp/tensorflow/mnist/input_data',
+        default='../cache/mnist',
         help='Directory for storing input data')
     parser.add_argument(
         '--xla', type=bool, default=True, help='Turn xla via JIT on')

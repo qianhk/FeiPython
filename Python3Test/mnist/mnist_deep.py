@@ -149,10 +149,10 @@ def main(_):
         correct_prediction = tf.cast(correct_prediction, tf.float32)
     accuracy = tf.reduce_mean(correct_prediction)
 
-    graph_location = tempfile.mkdtemp()
-    print('Saving graph to: %s' % graph_location)
-    train_writer = tf.summary.FileWriter(graph_location)
-    train_writer.add_graph(tf.get_default_graph())
+    # graph_location = tempfile.mkdtemp()
+    # print('Saving graph to: %s' % graph_location)
+    # train_writer = tf.summary.FileWriter(graph_location)
+    # train_writer.add_graph(tf.get_default_graph())
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
@@ -171,7 +171,6 @@ def main(_):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str,
-                        default='/tmp/tensorflow/mnist/input_data',
-                        help='Directory for storing input data')
+                        default='../cache/mnist')
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
