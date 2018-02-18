@@ -31,13 +31,14 @@ y_vals = np.add(y_vals, y_offset_vals)
 # print(y_vals)
 
 
-x_data = tf.placeholder(shape=[1], dtype=tf.float32)
-y_target = tf.placeholder(shape=[1], dtype=tf.float32)
+x_data = tf.placeholder(shape=[1], dtype=tf.float32, name='input')
+y_target = tf.placeholder(shape=[1], dtype=tf.float32, name='output')
 
 # 构造K
-K = tf.Variable(tf.random_normal(mean=2, shape=[1]))
+K = tf.Variable(tf.random_normal(mean=2, shape=[1]), name='k')
+b = tf.Variable(tf.random_normal(mean=20, shape=[1]), name='b')
 
-calcY = tf.add(tf.multiply(x_data, K), 3)
+calcY = tf.add(tf.multiply(x_data, K), b, name='calcY')
 
 loss = tf.square(y_target - calcY)
 
@@ -64,7 +65,7 @@ for i in range(data_amount):
     loss_vec.append(tmp_loss)
 
     if (i + 1) % 25 == 0:
-        print('Step #' + str(i + 1) + ' K = ' + str(sess.run(K)))
+        print('Step #' + str(i + 1) + ' K = ' + str(sess.run(K)) + ' b = ' + str(sess.run(b)))
         print('Loss = ' + str(sess.run(loss, feed_dict={x_data: x, y_target: y})))
 
 print('\nLast K = ' + str(sess.run(K)) + '  Loss = ' + str(sess.run(loss, feed_dict={x_data: [100], y_target: [503]})))
@@ -73,6 +74,13 @@ print('\nOver\n')
 
 # writer = tf.summary.FileWriter("../logs/boardTest", tf.get_default_graph())
 # writer.close()
+
+output_graph_def = tf.graph_util.convert_variables_to_constants(sess, sess.graph_def,
+                                                                output_node_names=['input', 'output', 'k',
+                                                                                   'calcY'])
+f = tf.gfile.FastGFile('../logs/kai_line_only_mul.pb', mode='wb')
+f.write(output_graph_def.SerializeToString())
+f.close()
 
 sess.close()
 
