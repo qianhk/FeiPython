@@ -43,7 +43,8 @@ for i in range(500):
 
 result = session.run([k, b])
 
-print('tx=%s ty=%s result=%s' % (tx, ty, result))
+print('tx=%s \nty=%s' % (tx, ty))
+print('result=%s' % result)
 
 output_graph_def = tf.graph_util.convert_variables_to_constants(session, session.graph_def,
                                                                 output_node_names=['input', 'output', 'k', 'b',

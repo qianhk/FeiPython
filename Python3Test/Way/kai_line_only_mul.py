@@ -36,7 +36,8 @@ y_target = tf.placeholder(shape=[1], dtype=tf.float32, name='output')
 
 # 构造K
 K = tf.Variable(tf.random_normal(mean=2, shape=[1]), name='k')
-b = tf.Variable(tf.random_normal(mean=20, shape=[1]), name='b')
+# b = tf.Variable(tf.random_normal(mean=20, shape=[1]), name='b')
+b = tf.constant(3, dtype=tf.float32)
 
 calcY = tf.add(tf.multiply(x_data, K), b, name='calcY')
 
