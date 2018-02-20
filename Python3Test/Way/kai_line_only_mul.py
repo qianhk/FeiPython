@@ -37,7 +37,7 @@ y_target = tf.placeholder(shape=[1], dtype=tf.float32, name='output')
 # 构造K
 K = tf.Variable(tf.random_normal(mean=2, shape=[1]), name='k')
 # b = tf.Variable(tf.random_normal(mean=20, shape=[1]), name='b')
-b = tf.constant(3, dtype=tf.float32)
+b = tf.constant(3, dtype=tf.float32, name='b')
 
 calcY = tf.add(tf.multiply(x_data, K), b, name='calcY')
 
@@ -55,7 +55,7 @@ train_step = my_opt.minimize(loss)
 
 loss_vec = []
 
-for i in range(data_amount):
+for i in range(data_amount * 2):
     rand_index = np.random.choice(data_amount)
     x = [x_vals[rand_index]]
     y = [y_vals[rand_index]]
@@ -64,6 +64,10 @@ for i in range(data_amount):
 
     tmp_loss = sess.run(loss, feed_dict={x_data: x, y_target: y})
     loss_vec.append(tmp_loss)
+
+    if tmp_loss < 0.0001:
+        print('tmp loss ok, step=%d k=%.4f loss=%.6f' % (i, sess.run(K), tmp_loss))
+        break
 
     if (i + 1) % 25 == 0:
         print('Step #' + str(i + 1) + ' K = ' + str(sess.run(K)) + ' b = ' + str(sess.run(b)))
@@ -77,9 +81,9 @@ print('\nOver\n')
 # writer.close()
 
 output_graph_def = tf.graph_util.convert_variables_to_constants(sess, sess.graph_def,
-                                                                output_node_names=['input', 'output', 'k',
+                                                                output_node_names=['input', 'output', 'k', 'b',
                                                                                    'calcY'])
-f = tf.gfile.FastGFile('../logs/kai_line_only_mul.pb', mode='wb')
+f = tf.gfile.FastGFile('../logs/kai_linear_only_mul.pb', mode='wb')
 f.write(output_graph_def.SerializeToString())
 f.close()
 
