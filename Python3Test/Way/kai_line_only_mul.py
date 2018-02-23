@@ -20,7 +20,7 @@ data_amount = 101
 # y_vals = np.add(np.repeat(5., data_amount), 3)
 
 # 但下面这个数据 K=nan ? 学习率的影响太大了，比较适合用0.0001
-x_vals = np.linspace(20, 100, data_amount)
+x_vals = np.linspace(20, 200, data_amount)
 y_vals = np.add(np.multiply(x_vals, 5), 3)
 
 # print(x_vals)
@@ -50,12 +50,12 @@ sess.run(init)
 
 print('init K=' + str(sess.run(K)))
 
-my_opt = tf.train.GradientDescentOptimizer(0.0001)
+my_opt = tf.train.GradientDescentOptimizer(0.00001)
 train_step = my_opt.minimize(loss)
 
 loss_vec = []
 
-for i in range(data_amount * 2):
+for i in range(data_amount * 4):
     rand_index = np.random.choice(data_amount)
     x = [x_vals[rand_index]]
     y = [y_vals[rand_index]]
@@ -66,12 +66,12 @@ for i in range(data_amount * 2):
     loss_vec.append(tmp_loss)
 
     if tmp_loss < 0.0001:
-        print('tmp loss ok, step=%d k=%.4f loss=%.6f' % (i, sess.run(K), tmp_loss))
+        print('tmp loss ok, step=%d k=%.4f loss=%.6f x=%.2f' % (i, sess.run(K), tmp_loss, x[0]))
         break
 
     if (i + 1) % 25 == 0:
         print('Step #' + str(i + 1) + ' K = ' + str(sess.run(K)) + ' b = ' + str(sess.run(b)))
-        print('Loss = ' + str(sess.run(loss, feed_dict={x_data: x, y_target: y})))
+        print('input=%.2f Loss = %s' % (x[0], str(sess.run(loss, feed_dict={x_data: x, y_target: y}))))
 
 print('\nLast K = ' + str(sess.run(K)) + '  Loss = ' + str(sess.run(loss, feed_dict={x_data: [100], y_target: [503]})))
 
@@ -96,4 +96,4 @@ plt.yticks(yticks)
 plt.title('Look Loss')
 plt.xlabel('Generation')
 plt.ylabel('Loss')
-plt.show()
+# plt.show()
