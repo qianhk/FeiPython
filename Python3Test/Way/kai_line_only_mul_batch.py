@@ -23,7 +23,7 @@ y_vals = np.multiply(x_vals, 5)
 y_vals = np.add(y_vals, 3)
 # print(y_vals)
 
-y_offset_vals = np.random.normal(0, 3000, data_amount)
+y_offset_vals = np.random.normal(0, 1000, data_amount)
 # print(y_offset_vals)
 
 y_vals = np.add(y_vals, y_offset_vals)

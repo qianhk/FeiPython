@@ -80,3 +80,8 @@ print("a's shape {}".format(a.shape))
 print("a's size {}".format(a.size))
 print("a's dtype {}".format(a.dtype))
 print("a's itemsize {}".format(a.itemsize))
+
+# 生成均值为loc，标准差为scale的正态分布矩阵，numpy中很多方法如果size不写则返回一个值
+y = np.random.normal(10, 1, (2, 5))
+print('\ny = %s\n' % y)
+print('y.mean=%s y.std=%s' % (y.mean(), y.std()))
