@@ -17,7 +17,7 @@ fig = plt.figure()
 # plt.plot(X, S, 'r-', lw=1.5)
 
 plt.plot(X, C, 'b-', lw=2.5, label='cos')
-plt.plot(X, S, 'r-', lw=1.5, label='sin')
+plt.plot(X, S, 'r-.', lw=1.5, label='sin')
 
 plt.legend(loc='upper left')
 
@@ -26,7 +26,7 @@ plt.xlim(X.min() * 1.2, X.max() * 1.2)
 
 # plt.xticks([-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi])
 plt.xticks([-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi],
-           [r'$-\pi$', r'$-\pi/2$', r'$0$', r'$\pi/2$', r'$+\pi$'])
+           [r'-π', r'$-\frac{\pi}{2}$', r'$0$', r'$\frac{\pi}{2}$', r'$+\pi$'])
 plt.yticks([-1, 0, 1])
 
 ax = plt.gca()
