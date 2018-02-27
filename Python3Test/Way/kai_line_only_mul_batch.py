@@ -14,16 +14,16 @@ sess = tf.Session()
 
 # 数据数量
 data_amount = 101
-batch_size = 25
+batch_size = 50
 
-x_vals = np.linspace(20, 10000, data_amount)
+x_vals = np.linspace(20, 200, data_amount)
 # print(x_vals)
 
 y_vals = np.multiply(x_vals, 5)
 y_vals = np.add(y_vals, 3)
 # print(y_vals)
 
-y_offset_vals = np.random.normal(0, 1000, data_amount)
+y_offset_vals = np.random.normal(0, 15, data_amount)
 # print(y_offset_vals)
 
 y_vals = np.add(y_vals, y_offset_vals)
@@ -47,12 +47,12 @@ sess.run(init)
 
 print('init K=' + str(sess.run(K)))
 
-my_opt = tf.train.GradientDescentOptimizer(0.0000000001)
+my_opt = tf.train.GradientDescentOptimizer(0.0000005)
 train_step = my_opt.minimize(loss)
 
 loss_vec = []
 
-for i in range(5000):
+for i in range(1000):
     rand_index = np.random.choice(data_amount, size=batch_size)
     x = np.transpose([x_vals[rand_index]])
     y = np.transpose([y_vals[rand_index]])
@@ -83,12 +83,12 @@ best_fit = []
 for i in x_vals:
     best_fit.append(KValue * i + 3)
 
-plt.plot(x_vals, y_vals, 'o', label='Data')
-plt.plot(x_vals, best_fit, 'r-', label='Base fit line')
-# plt.plot(loss_vec, 'k-')
+# plt.plot(x_vals, y_vals, 'o', label='Data')
+# plt.plot(x_vals, best_fit, 'r-', label='Base fit line')
+plt.plot(loss_vec, 'k-')
 
-yticks = np.linspace(0, 5000, 11)
-plt.yticks(yticks)
+# yticks = np.linspace(0, 5000, 11)
+# plt.yticks(yticks)
 plt.title('Batch Look Loss')
 plt.xlabel('Generation')
 plt.ylabel('Loss')
