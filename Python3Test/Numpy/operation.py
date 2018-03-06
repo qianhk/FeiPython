@@ -34,6 +34,7 @@ print('np.mat(a) * np.mat(b) = %s' % (np.mat(a) * np.mat(c)))
 print('c = %s' % c)
 print('a.T = %s' % a.T)
 print('dot(a, c) = %s\n' % np.dot(a, c))
+print('a @ c = %s' % (a @ c))
 
 print('sum=%s min=%s max=%s mean=%s var=%s std=%s\n' % (a.sum(), a.min(), a.max(), a.mean(), a.var(), a.std()))
 
