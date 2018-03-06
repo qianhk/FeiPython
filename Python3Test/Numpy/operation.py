@@ -20,7 +20,7 @@ b = np.array([[2, 1, 0], [1, 1, 1]])
 
 c = a.transpose()
 
-print('\na = %s\n' % a)
+print('\na = %s type=%s\n' % (a, type(a)))
 print('b = %s\n' % b)
 
 print('a + 1 = %s' % (a + 1))
@@ -85,3 +85,24 @@ print("a's itemsize {}".format(a.itemsize))
 y = np.random.normal(10, 1, (2, 5))
 print('\ny = %s\n' % y)
 print('y.mean=%s y.std=%s' % (y.mean(), y.std()))
+
+D = np.mat("1 2 3; 2 3 1; 3 1 2")
+print('D.det = %s' % np.linalg.det(D))
+# print('A.det = %s' % np.linalg.det(np.mat(a))) #LinAlgError: Last 2 dimensions of the array must be square
+print('\nD = %s type = %s' % (D, type(D)))
+D_I = D.I
+print('D.I = %s type = %s' % (D_I, type(D_I)))
+print('D * D.I = %s' % np.dot(D, D_I))
+print('D.I * D = %s' % np.dot(D_I, D))
+
+print('\neye(3) = %s' % (np.eye(3)))
+
+M = np.array([1, 2, 3])
+N = np.array([1, 0, 2])
+print('\nM = %s    N = %s type(M)=%s' % (M, N, type(M)))
+
+DOT_MN = np.dot(M, N)
+print('dot(M,N)=%s  type=%s' % (DOT_MN, type(DOT_MN)))
+
+DOT_MAT_MN = np.dot(np.mat(M), np.mat(N).T)
+print('dot(mat(M), mat(N).T)=%s  type=%s' % (DOT_MAT_MN, type(DOT_MAT_MN)))
