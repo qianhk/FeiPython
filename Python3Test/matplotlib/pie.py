@@ -14,16 +14,16 @@ def set_ch():
 
 n = 5
 # Z = np.random.uniform(0, 1, n)
-Z = np.array([1, 2, 3, 4])
-print('Z= %s' % Z)
+list = np.array([1, 2, 3, 4])
+print('Z= %s' % list)
 
 # plt.pie(Z)
 # plt.show()
 
-explode = (0.15, 0, 0, 0)
 labels = [u'First', 'Second', 'Third', 'Fourth']
 colors = ['red', 'Yellow', 'blue', 'green']
-plt.pie(Z, explode=explode, labels=labels, colors=colors, startangle=60, labeldistance=1.1, pctdistance=0.6,
+explode = (0.15, 0, 0, 0)
+plt.pie(list, explode=explode, labels=labels, colors=colors, startangle=60, labeldistance=1.1, pctdistance=0.6,
         autopct='%.1f%%')
 plt.axis('equal')
 plt.legend()
