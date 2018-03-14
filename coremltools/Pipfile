@@ -7,7 +7,9 @@ name = "pypi"
 
 [packages]
 
+numpy = "*"
 coremltools = "*"
+six = "*"
 
 
 [dev-packages]
