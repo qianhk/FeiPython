@@ -32,3 +32,12 @@ print('\ncalifornia_housing_dataframe head()=\n%s' % california_housing_datafram
 
 print('\ncalifornia_housing_dataframe.hist(\'housing_median_age\') = \n%s' % california_housing_dataframe.hist(
     'housing_median_age'))
+
+cityNames = dataFrame['City name']
+print('\ncityNames type=%s value =\n%s' % (type(cityNames), cityNames))
+
+cityNames_sub1 = cityNames[1]
+print('\ncityNames[1] type=%s value=%s' % (type(cityNames_sub1), cityNames_sub1))
+
+dataFrame02 = dataFrame[0:2]
+print('\ndataFrame02 type=%s value=\n%s' % (type(dataFrame02), dataFrame02))
