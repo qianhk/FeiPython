@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import pandas as pd
+import numpy as np
 
 # from https://colab.research.google.com/notebooks/mlcc/intro_to_pandas.ipynb?hl=zh-cn
 
@@ -41,3 +42,19 @@ print('\ncityNames[1] type=%s value=%s' % (type(cityNames_sub1), cityNames_sub1)
 
 dataFrame02 = dataFrame[0:2]
 print('\ndataFrame02 type=%s value=\n%s' % (type(dataFrame02), dataFrame02))
+
+print('\npopulation / 1000 =\n%s' % (population / 1000.0))
+
+print('\nnp.log(population)=\n%s' % np.log(population))
+
+print('\npopulation.apply(lambda val: val > 1000000) =\n%s' % (population.apply(lambda val: val > 100_0000)))
+
+dataFrame['Area square miles'] = pd.Series([46.87, 176.53, 97.92])
+dataFrame['Population density'] = dataFrame['Population'] / dataFrame['Area square miles']
+
+print('\n again dataFrame=\n%s' % dataFrame)
+
+dataFrame['Is wide and has saint name'] = (dataFrame['Area square miles'] > 50) & dataFrame['City name'].apply(
+    lambda name: name.startswith('San'))
+
+print('\n again2 dataFrame=\n%s' % dataFrame)
