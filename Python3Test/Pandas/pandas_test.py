@@ -52,9 +52,14 @@ print('\npopulation.apply(lambda val: val > 1000000) =\n%s' % (population.apply(
 dataFrame['Area square miles'] = pd.Series([46.87, 176.53, 97.92])
 dataFrame['Population density'] = dataFrame['Population'] / dataFrame['Area square miles']
 
-print('\n again dataFrame=\n%s' % dataFrame)
+print('\nAgain dataFrame=\n%s' % dataFrame)
 
 dataFrame['Is wide and has saint name'] = (dataFrame['Area square miles'] > 50) & dataFrame['City name'].apply(
     lambda name: name.startswith('San'))
 
-print('\n again2 dataFrame=\n%s' % dataFrame)
+print('\nAgain2 dataFrame=\n%s' % dataFrame)
+
+print('\nCity_names.index=%s' % city_names.index)
+print('\nDataFrame.index=%s' % dataFrame.index)
+print('\nDataFrame.reindex=\n%s' % dataFrame.reindex([2, 3, 5, 0, 1]))
+print('\nDataFrame permutation =\n%s' % dataFrame.reindex(np.random.permutation(dataFrame.index)))
