@@ -23,11 +23,16 @@ Last K = [ 5.0738945]  Loss = [ 54.60419846]
 测试集
 验证集
 
-2变量线性回归 J(θ0, θ1)
+一、介绍 (Introduction)
 
-多元线性回归
+二、单变量线性回归 (Linear Regression with One Variable)
+ J(θ0, θ1)
+
+三、 线性代数回顾 (Linear Algebra Review)
 
 向量外积，又叫叉积或向量积
+
+四、多元线性回归 (Linear Regression with Multiple Variables)
 
 特征缩放:
 在我们面对多维特征问题的时候，我们要保证这些特征都具有相近的尺度，这将帮助梯度下降算法更快地收敛。
@@ -45,7 +50,11 @@ Last K = [ 5.0738945]  Loss = [ 54.60419846]
 θ = (X转置 * X) 求逆 * X转置 * y
 4.7 正规方程及不可逆性(选修) pdf中有为啥θ等于这个公式的推导过程。
 
+五、 Octave教程(忽略)
+
 5.6 向量化 要习惯用向量运算代替for循环
+
+六、 逻辑回归 (Logistic Regression)
 
 6.1 分类问题
 逻辑回归是一种分类算法，逻辑回归只是算法的名字。
@@ -54,14 +63,58 @@ Last K = [ 5.0738945]  Loss = [ 54.60419846]
 
 6.7 多分类逻辑回归
 
+七、正则化(Regularization)
+
+八、神经网络：表述 (Neural Networks: representation)
+
 8.1 非线性假设
 
-8.5 - 8.6 用bool值讲神经网络的原理
+8.2 神经元和大脑
 
-10.3 over
+8.3 8.4 模型表示
+
+8.5 - 8.6 样本理解 用bool值讲神经网络的原理
+
+九、神经网络的学习 (Neural Networks: Learning)
+
+9.1 代价函数
+9.2 反向传播算法
+9.5 梯度检验
+9.6 随机初始化
+
+十、应用机器学习的建议 (Advice for Applying Machine Learning)
+
+10.1 决定下一步做什么 (Diciding What to Try Next)
+10.2 评估一个假设
+10.3 模型选择和交叉验证集
+10.4 诊断偏差和方差
+10.5 正则化和偏差/方差
+10.6 学习曲线
+10.7 决定下一步做什么 (Diciding What to Do Next Revisited)
+	解决高方差、高偏差的6种方式：更多训练实例、增加或减少特征、增加多项式特征、减少或增加正则化程度
+
+十一、机器学习系统的设计 (Machine Learning System Design)
+11.1 首先要做什么
+11.2 误差分析
+11.3 类偏斜的误差度量
+11.4 查准率和查全率之间的权衡
+11.5 机器学习的数据
 
 
+十二、支持向量机 (Support Vector Machine)
 
+十三、聚类 (Clustering)
 
+十四、降维 (Dimensionality Reduction)
+
+十五、异常检测 (Anomaly Detection)
+
+十六、推荐系统 (Recommender Systems)
+
+十七、大规模机器学习 (Large Scale Machine Learning)
+
+十八、应用实例：图片文字识别 (Application Example: Photo OCR)
+
+十九、总结 (Conclusion)
 
 
