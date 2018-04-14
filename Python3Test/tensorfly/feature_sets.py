@@ -157,6 +157,7 @@ def train_model(
     plt.plot(training_rmse, label="training")
     plt.plot(validation_rmse, label="validation")
     plt.legend()
+    plt.show()
 
     return linear_regressor
 
@@ -174,6 +175,8 @@ assert minimal_features, "You must select at least one feature!"
 minimal_training_examples = training_examples[minimal_features]
 minimal_validation_examples = validation_examples[minimal_features]
 
+print('\n------   train 1   ------')
+
 #
 # Don't forget to adjust these parameters.
 #
@@ -184,4 +187,33 @@ train_model(
     training_examples=minimal_training_examples,
     training_targets=training_targets,
     validation_examples=minimal_validation_examples,
+    validation_targets=validation_targets)
+
+plt.scatter(training_examples["latitude"], training_targets["median_house_value"])
+plt.show()
+
+print('\n------   train 2   ------')
+
+LATITUDE_RANGES = zip(range(32, 44), range(33, 45))
+
+
+def select_and_transform_features(source_df):
+    selected_examples = pd.DataFrame()
+    selected_examples["median_income"] = source_df["median_income"]
+    for r in LATITUDE_RANGES:
+        selected_examples["latitude_%d_to_%d" % r] = source_df["latitude"].apply(
+            lambda l: 1.0 if l >= r[0] and l < r[1] else 0.0)
+    return selected_examples
+
+
+selected_training_examples = select_and_transform_features(training_examples)
+selected_validation_examples = select_and_transform_features(validation_examples)
+
+_ = train_model(
+    learning_rate=0.01,
+    steps=500,
+    batch_size=5,
+    training_examples=selected_training_examples,
+    training_targets=training_targets,
+    validation_examples=selected_validation_examples,
     validation_targets=validation_targets)
