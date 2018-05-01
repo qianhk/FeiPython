@@ -30,10 +30,31 @@ train = optimizer.minimize(loss)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
+loss_vec = []
+
 for step in range(201):
     sess.run(train)
+    loss_vec.append(sess.run(loss))
     if step % 20 == 0:
         print('step=%d weight=%f bias=%f' % (step, sess.run(w), sess.run(b)))
 
+W = sess.run(w)
+B = sess.run(b)
+
 sess.close()
 
+print('last W=%f B=%f' % (W, B))
+
+best_fit = []
+for x in x_data:
+    best_fit.append(W * x + B)
+
+fig = plt.figure()
+
+ax = fig.add_subplot(121)
+ax.scatter(x_data, y_data, color='y', label="样本", linewidths=0.5)
+ax.plot(x_data, best_fit, color='b', linewidth=2)
+
+ax = fig.add_subplot(122)
+ax.plot(loss_vec, color='g', linewidth=1)
+plt.show()
