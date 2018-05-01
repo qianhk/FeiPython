@@ -29,9 +29,11 @@ print('california_housing_dataframe=\n%s' % california_housing_dataframe)
 
 print('\ncalifornia_housing_dataframe.describe()=\n%s' % california_housing_dataframe.describe())
 
+my_featureTmp = california_housing_dataframe["total_rooms"]
 my_feature = california_housing_dataframe[["total_rooms"]]
 print('my_feature = \n%s' % my_feature)
 
+feature_columnsTmp = tf.feature_column.numeric_column("total_rooms")
 feature_columns = [tf.feature_column.numeric_column("total_rooms")]
 print('\nfeature_columns = \n%s' % feature_columns)
 
@@ -46,9 +48,17 @@ linear_regressor = tf.estimator.LinearRegressor(
 )
 
 
-def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
+def my_input_fn(aFeatures, targets, batch_size=1, shuffle=True, num_epochs=None):
     # Convert pandas data into a dict of np arrays.
-    features = {key: np.array(value) for key, value in dict(features).items()}
+    features = {key: np.array(value) for key, value in dict(aFeatures).items()}
+
+    listOne = [2, 3, 4]
+    listTwo = [2 * item for item in listOne if item > 2]
+
+    dictFeature = dict(aFeatures)
+    dictFeatureItems = dictFeature.items()
+    featuresTmp = {key: np.array(value) for key, value in dictFeatureItems}
+
 
     # Construct a dataset, and configure batching/repeating
     ds = Dataset.from_tensor_slices((features, targets))  # warning: 2GB limit
@@ -59,8 +69,8 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
         ds = ds.shuffle(buffer_size=10000)
 
     # Return the next batch of data
-    features, labels = ds.make_one_shot_iterator().get_next()
-    return features, labels
+    featuresOneShot, labels = ds.make_one_shot_iterator().get_next()
+    return featuresOneShot, labels
 
 
 _ = linear_regressor.train(
