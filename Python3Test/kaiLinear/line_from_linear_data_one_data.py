@@ -10,8 +10,6 @@ x_data_array, y_data_array = kai.get_linear_data()
 w = tf.Variable(0, dtype=tf.float32, name='w')
 b = tf.constant(50, dtype=tf.float32, name='b')
 
-# x_data = tf.placeholder(shape2=[1], dtype=tf.float32, name='inputX')
-# y_target = tf.placeholder(shape2=[1], dtype=tf.float32, name='yTarget')
 x_data = tf.placeholder(dtype=tf.float32, name='inputX')
 y_target = tf.placeholder(dtype=tf.float32, name='yTarget')
 
