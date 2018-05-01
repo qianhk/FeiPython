@@ -18,6 +18,7 @@ y_target = tf.placeholder(dtype=tf.float32, name='yTarget')
 y_calc = tf.add(tf.multiply(x_data, w), b, name='yCalc')
 
 loss = tf.square(y_calc - y_target)
+loss = tf.reduce_mean(loss)
 optimizer = tf.train.GradientDescentOptimizer(0.00001)
 train = optimizer.minimize(loss)
 
@@ -27,9 +28,10 @@ sess.run(tf.global_variables_initializer())
 loss_vec = []
 
 data_amount = len(x_data_array)
+batch_size = 20
 
 for step in range(201):
-    rand_index = np.random.choice(data_amount)
+    rand_index = np.random.choice(data_amount, size=batch_size)
     x = x_data_array[rand_index]
     y = y_data_array[rand_index]
     sess.run(train, feed_dict={x_data: x, y_target: y})
@@ -45,4 +47,4 @@ sess.close()
 
 print('last W=%f B=%f' % (_w, _b))
 
-kai.show_visualization_data(x_data_array, y_data_array, _w, _b, loss_vec, title='One Data')
+kai.show_visualization_data(x_data_array, y_data_array, _w, _b, loss_vec, title='Batch Data')
