@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 mock_data = np.genfromtxt('../data/linear_data.csv', delimiter=',', skip_header=1, dtype=float)
 # print('mock_data=\n%s' % mock_data)
 
+# y = x * 5 + 50
+
 x_data_array = np.array(mock_data[:, 0])
 y_data_array = np.array(mock_data[:, 1])
 print('x_data=\n%s' % x_data_array)
