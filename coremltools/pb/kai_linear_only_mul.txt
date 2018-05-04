@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+0: op name = import/input, op type = ( Placeholder ), inputs = , outputs = import/input:0
+@input shapes:
+@output shapes:
+name = import/input:0 : (1,)
+---------------------------------------------------------------------------------------------------------------------------------------------
+1: op name = import/output, op type = ( Placeholder ), inputs = , outputs = import/output:0
+@input shapes:
+@output shapes:
+name = import/output:0 : (1,)
+---------------------------------------------------------------------------------------------------------------------------------------------
+2: op name = import/k, op type = ( Const ), inputs = , outputs = import/k:0
+@input shapes:
+@output shapes:
+name = import/k:0 : (1,)
+---------------------------------------------------------------------------------------------------------------------------------------------
+3: op name = import/k/read, op type = ( Identity ), inputs = import/k:0, outputs = import/k/read:0
+@input shapes:
+name = import/k:0 : (1,)
+@output shapes:
+name = import/k/read:0 : (1,)
+---------------------------------------------------------------------------------------------------------------------------------------------
+4: op name = import/b, op type = ( Const ), inputs = , outputs = import/b:0
+@input shapes:
+@output shapes:
+name = import/b:0 : ()
+---------------------------------------------------------------------------------------------------------------------------------------------
+5: op name = import/Mul, op type = ( Mul ), inputs = import/input:0, import/k/read:0, outputs = import/Mul:0
+@input shapes:
+name = import/input:0 : (1,)
+name = import/k/read:0 : (1,)
+@output shapes:
+name = import/Mul:0 : (1,)
+---------------------------------------------------------------------------------------------------------------------------------------------
+6: op name = import/calcY, op type = ( Add ), inputs = import/Mul:0, import/b:0, outputs = import/calcY:0
+@input shapes:
+name = import/Mul:0 : (1,)
+name = import/b:0 : ()
+@output shapes:
+name = import/calcY:0 : (1,)
+---------------------------------------------------------------------------------------------------------------------------------------------
+OPS counts:
+Add : 1
+Identity : 1
+Mul : 1
+Const : 2
+Placeholder : 2
