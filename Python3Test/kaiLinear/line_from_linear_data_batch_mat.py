@@ -48,6 +48,16 @@ _w1 = sess.run(w)
 _w2 = _w1[0, 0]
 _b = sess.run(b)
 
+summary_writer = tf.summary.FileWriter("../logs/line_from_linear_data", tf.get_default_graph())
+summary_writer.close()
+
+output_graph_def = tf.graph_util.convert_variables_to_constants(sess, sess.graph_def,
+                                                                output_node_names=['inputX', 'yTarget', 'w', 'b',
+                                                                                   'yCalc'])
+gfile = tf.gfile.FastGFile('../logs/line_from_linear_data_batch_mat.pb', mode='wb')
+gfile.write(output_graph_def.SerializeToString())
+gfile.close()
+
 sess.close()
 
 print('last W=%f B=%f' % (_w, _b))
