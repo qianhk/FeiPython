@@ -8,7 +8,7 @@ import tensorflow as tf
 from tensorflow.python.data import Dataset
 import math
 
-#https://colab.research.google.com/notebooks/mlcc/first_steps_with_tensor_flow.ipynb?hl=zh-cn#scrollTo=AZWF67uv0HTG
+# https://colab.research.google.com/notebooks/mlcc/first_steps_with_tensor_flow.ipynb?hl=zh-cn#scrollTo=AZWF67uv0HTG
 
 linear_dataframe = pd.read_csv("../data/linear_data.csv", sep=",")
 
@@ -65,3 +65,8 @@ print("Root Mean Squared Error: %0.3f" % root_mean_squared_error)
 weight = linear_regressor.get_variable_value('linear/linear_model/x/weights')
 bias = linear_regressor.get_variable_value('linear/linear_model/bias_weights')
 print('\n weight=%s  bias=%s' % (weight, bias))
+
+result_dataframe = pd.DataFrame()
+result_dataframe["predictions"] = pd.Series(predictions)
+result_dataframe["targets"] = target_series
+print('\nresult dataframe:\n%s' % result_dataframe.describe())
