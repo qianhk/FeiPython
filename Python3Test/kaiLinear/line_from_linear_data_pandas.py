@@ -7,6 +7,7 @@ from sklearn import metrics
 import tensorflow as tf
 from tensorflow.python.data import Dataset
 import math
+import kaiLinear.line_from_linear_data_utils as kai
 
 # https://colab.research.google.com/notebooks/mlcc/first_steps_with_tensor_flow.ipynb?hl=zh-cn#scrollTo=AZWF67uv0HTG
 
@@ -14,7 +15,7 @@ linear_dataframe = pd.read_csv("../data/linear_data.csv", sep=",")
 
 print('linear_dataframe.describe()=%s\n' % linear_dataframe.describe())
 
-x_series = linear_dataframe["x"]
+x_series = linear_dataframe["x"].apply(lambda x: max(x, -10000))
 my_feature_dataframe = linear_dataframe[["x"]]
 
 x_feature_column = tf.feature_column.numeric_column("x")
@@ -41,7 +42,7 @@ def my_input_fn(feature_dataframe, target_series, batch_size=1, shuffle=True, nu
     return features, labels
 
 
-_ = linear_regressor.train(input_fn=lambda: my_input_fn(my_feature_dataframe, target_series), steps=20000)
+_ = linear_regressor.train(input_fn=lambda: my_input_fn(my_feature_dataframe, target_series), steps=2000)
 
 predict_input_fn = lambda: my_input_fn(my_feature_dataframe, target_series, num_epochs=1, shuffle=False)
 
@@ -65,8 +66,12 @@ print("Root Mean Squared Error: %0.3f" % root_mean_squared_error)
 weight = linear_regressor.get_variable_value('linear/linear_model/x/weights')
 bias = linear_regressor.get_variable_value('linear/linear_model/bias_weights')
 print('\n weight=%s  bias=%s' % (weight, bias))
+[[_w]] = weight
+[_b] = bias
 
 result_dataframe = pd.DataFrame()
 result_dataframe["predictions"] = pd.Series(predictions)
 result_dataframe["targets"] = target_series
 print('\nresult dataframe:\n%s' % result_dataframe.describe())
+
+kai.show_visualization_data(x_series, target_series, _w, _b, None, title='Pandas')

@@ -30,7 +30,7 @@ sess.run(tf.global_variables_initializer())
 
 loss_vec = []
 
-for step in range(200001):
+for step in range(10_0001):
     sess.run(train)
     loss_vec.append(sess.run(loss))
     if step % 100 == 0:

@@ -26,8 +26,9 @@ def show_visualization_data(x_data_array, y_data_array, w, b, loss_vec, title=No
     ax.scatter(x_data_array, y_data_array, color='y', label="样本", linewidths=0.5)
     ax.plot(x_data_array, best_fit, color='b', linewidth=2)
 
-    ax = fig.add_subplot(122)
-    ax.plot(loss_vec, color='g', linewidth=1)
-    ax.set_ylim(0, 1000)
+    if loss_vec is not None:
+        ax = fig.add_subplot(122)
+        ax.plot(loss_vec, color='g', linewidth=1)
+        ax.set_ylim(0, 1000)
 
     plt.show()
