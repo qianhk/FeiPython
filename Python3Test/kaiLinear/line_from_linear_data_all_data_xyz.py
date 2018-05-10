@@ -4,6 +4,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 # z = 2x + y - 1
 
@@ -13,16 +14,19 @@ target_data_array = np.array([0, 1, 2, 3, 4, 5])
 # print('x_data=\n%s' % x_data_array)
 # print('y_data=\n%s' % y_data_array)
 
-w1 = tf.Variable(0, dtype=tf.float32, name='w1')
-w2 = tf.Variable(0, dtype=tf.float32, name='w2')
+w1 = tf.Variable(0, dtype=tf.float64, name='w1')
+# w1 = tf.Variable(1.999777, dtype=tf.float64, name='w1')
 
-b = tf.Variable(0., name='b')
-# b = tf.constant(0., name='b')
+w2 = tf.Variable(0, dtype=tf.float64, name='w2')
+# w2 = tf.Variable(0.999503, dtype=tf.float64, name='w2')
+
+b = tf.Variable(0., name='b', dtype=tf.float64)
+# b = tf.Variable(-0.998982, name='b', dtype=tf.float64)
 
 z_array = w1 * x_data_array + w2 * y_data_array + b
 
 loss = tf.reduce_mean(tf.square(target_data_array - z_array))
-optimizer = tf.train.GradientDescentOptimizer(0.0003)
+optimizer = tf.train.GradientDescentOptimizer(0.0001)
 train = optimizer.minimize(loss)
 
 sess = tf.Session()
@@ -30,11 +34,11 @@ sess.run(tf.global_variables_initializer())
 
 loss_vec = []
 
-for step in range(10_0001):
+for step in range(20_0001):
     sess.run(train)
     loss_vec.append(sess.run(loss))
-    if step % 100 == 0:
-        print('step=%d w1=%f w2=%f bias=%f loss=%s' % (step, sess.run(w1), sess.run(w2), sess.run(b), sess.run(loss)))
+    if step % 1000 == 0:
+        print('step=%d w1=%f w2=%f bias=%f loss=%s' % (step, sess.run(w1), sess.run(w2), sess.run(b), math.sqrt(sess.run(loss))))
 
 _w1 = sess.run(w1)
 _w2 = sess.run(w2)

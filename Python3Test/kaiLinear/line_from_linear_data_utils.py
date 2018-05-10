@@ -17,17 +17,17 @@ def show_visualization_data(x_data_array, y_data_array, w, b, loss_vec, title=No
     for x in x_data_array:
         best_fit.append(w * x + b)
 
-    fig = plt.figure()
+    plt.figure()
 
     if title is not None:
         plt.title(title)
 
-    ax = fig.add_subplot(121)
+    ax = plt.subplot(121)
     ax.scatter(x_data_array, y_data_array, color='y', label="样本", linewidths=0.5)
     ax.plot(x_data_array, best_fit, color='b', linewidth=2)
 
     if loss_vec is not None:
-        ax = fig.add_subplot(122)
+        ax = plt.subplot(122)
         ax.plot(loss_vec, color='g', linewidth=1)
         ax.set_ylim(0, 1000)
 

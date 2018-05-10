@@ -31,3 +31,11 @@ two_b = np.log(data_b + 10)
 plt.plot(range(len(data_b)), one_b, 'r')
 plt.plot(range(len(data_b)), two_b, 'b')
 plt.show()
+
+# plt.axis('off')
+# plt.xticks([])
+# plt.yticks([])
+
+# frame = plt.gca()
+# frame.axes.get_yaxis().set_visible(False)
+# frame.axes.get_xaxis().set_visible(False)
