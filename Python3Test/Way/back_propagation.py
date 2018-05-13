@@ -118,5 +118,9 @@ for i in range(len(x_vals)):
     prediction = sess.run(tf.round(tf.sigmoid(my_output)), feed_dict={x_data: x_val})
     predictions.append(prediction[0])
 
+plt.hist(x_vals, alpha=0.3)
+plt.scatter(x_vals, y_vals, c='r', alpha=0.3)
+plt.show()
+
 accuracy = sum(x == y for x, y in zip(predictions, y_vals)) / 100.
 print('Ending Accuracy = ' + str(np.round(accuracy, 2)))
