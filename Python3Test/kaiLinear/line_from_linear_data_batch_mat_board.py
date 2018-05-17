@@ -49,8 +49,11 @@ for step in range(8_001):
     y = np.transpose([y_data_array[rand_index]])
     sess.run(train, feed_dict={x_data: x, y_target: y})
     if step % 200 == 0:
-        loss_value = sess.run(loss, feed_dict={x_data: x, y_target: y})
+        run_options = tf.RunOptions(trace_level=tf.RunOptions.FULL_TRACE)
+        run_metadata = tf.RunMetadata()
+        loss_value = sess.run(loss, feed_dict={x_data: x, y_target: y}, options=run_options, run_metadata=run_metadata)
         loss_vec.append(loss_value)
+        summary_writer.add_run_metadata(run_metadata, 'step %04d' % step)
         print('step=%d weight=%s bias=%s loss=%s' % (step, sess.run(w), sess.run(b), loss_value))
         tf.summary.scalar('loss', loss)
         merged = tf.summary.merge_all()
@@ -61,8 +64,6 @@ for step in range(8_001):
 _w1 = sess.run(w)
 _w2 = _w1[0, 0]
 _b = sess.run(b)
-
-
 
 summary_writer.close()
 
