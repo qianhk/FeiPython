@@ -151,13 +151,14 @@ def train_linear_regressor_model(
         validation_root_mean_squared_error = math.sqrt(
             metrics.mean_squared_error(validation_predictions, validation_targets))
         # Occasionally print the current loss.
-        print("  period %02d : %0.2f" % (period, training_root_mean_squared_error))
+        print("  period %02d : train_rmse=%0.2f validation_rmse=%.2f" % (period, training_root_mean_squared_error, validation_root_mean_squared_error))
         # Add the loss metrics from this period to our list.
         training_rmse.append(training_root_mean_squared_error)
         validation_rmse.append(validation_root_mean_squared_error)
     print("Model training finished.")
 
     # Output a graph of loss metrics over periods.
+    plt.figure()
     plt.ylabel("RMSE")
     plt.xlabel("Periods")
     plt.title("Root Mean Squared Error vs. Periods")
@@ -165,28 +166,34 @@ def train_linear_regressor_model(
     plt.plot(training_rmse, label="training")
     plt.plot(validation_rmse, label="validation")
     plt.legend()
+    plt.show()
 
     return linear_regressor
 
-
-linear_regressor = train_linear_regressor_model(
-    learning_rate=0.000001,
-    steps=200,
-    batch_size=20,
-    training_examples=training_examples,
-    training_targets=training_targets,
-    validation_examples=validation_examples,
-    validation_targets=validation_targets)
 
 predict_validation_input_fn = lambda: my_input_fn(validation_examples,
                                                   validation_targets["median_house_value_is_high"],
                                                   num_epochs=1,
                                                   shuffle=False)
 
-validation_predictions = linear_regressor.predict(input_fn=predict_validation_input_fn)
-validation_predictions = np.array([item['predictions'][0] for item in validation_predictions])
+test_linear_regressor = False
 
-_ = plt.hist(validation_predictions)
+if test_linear_regressor:
+    linear_regressor = train_linear_regressor_model(
+        learning_rate=0.000001,
+        steps=200,
+        batch_size=20,
+        training_examples=training_examples,
+        training_targets=training_targets,
+        validation_examples=validation_examples,
+        validation_targets=validation_targets)
+
+    validation_predictions = linear_regressor.predict(input_fn=predict_validation_input_fn)
+    validation_predictions = np.array([item['predictions'][0] for item in validation_predictions])
+
+    plt.figure()
+    _ = plt.hist(validation_predictions)
+    plt.show()
 
 
 def train_linear_classifier_model(
@@ -197,29 +204,6 @@ def train_linear_classifier_model(
         training_targets,
         validation_examples,
         validation_targets):
-    """Trains a linear regression model of one feature.
-
-    In addition to training, this function also prints training progress information,
-    as well as a plot of the training and validation loss over time.
-
-    Args:
-      learning_rate: A `float`, the learning rate.
-      steps: A non-zero `int`, the total number of training steps. A training step
-        consists of a forward and backward pass using a single batch.
-      batch_size: A non-zero `int`, the batch size.
-      training_examples: A `DataFrame` containing one or more columns from
-        `california_housing_dataframe` to use as input features for training.
-      training_targets: A `DataFrame` containing exactly one column from
-        `california_housing_dataframe` to use as target for training.
-      validation_examples: A `DataFrame` containing one or more columns from
-        `california_housing_dataframe` to use as input features for validation.
-      validation_targets: A `DataFrame` containing exactly one column from
-        `california_housing_dataframe` to use as target for validation.
-
-    Returns:
-      A `LinearClassifier` object trained on the training data.
-    """
-
     periods = 10
     steps_per_period = steps / periods
 
@@ -273,6 +257,7 @@ def train_linear_classifier_model(
     print("Model training finished.")
 
     # Output a graph of loss metrics over periods.
+    plt.figure()
     plt.ylabel("LogLoss")
     plt.xlabel("Periods")
     plt.title("LogLoss vs. Periods")
@@ -280,7 +265,7 @@ def train_linear_classifier_model(
     plt.plot(training_log_losses, label="training")
     plt.plot(validation_log_losses, label="validation")
     plt.legend()
-
+    plt.show()
     return linear_classifier
 
 
@@ -292,3 +277,49 @@ linear_classifier = train_linear_classifier_model(
     training_targets=training_targets,
     validation_examples=validation_examples,
     validation_targets=validation_targets)
+
+evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_input_fn)
+
+print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
+print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
+
+validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
+# Get just the probabilities for the positive class
+validation_probabilities = np.array([item['probabilities'][1] for item in validation_probabilities])
+
+plt.figure()
+false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
+    validation_targets, validation_probabilities)
+plt.plot(false_positive_rate, true_positive_rate, label="our model")
+plt.plot([0, 1], [0, 1], label="random classifier")
+_ = plt.legend(loc=2)
+plt.show()
+
+again_test = True
+
+if again_test:
+    linear_classifier = train_linear_classifier_model(
+        learning_rate=0.000003,
+        steps=20000,
+        batch_size=500,
+        training_examples=training_examples,
+        training_targets=training_targets,
+        validation_examples=validation_examples,
+        validation_targets=validation_targets)
+
+    evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_input_fn)
+
+    print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
+    print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
+
+    validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
+    # Get just the probabilities for the positive class
+    validation_probabilities = np.array([item['probabilities'][1] for item in validation_probabilities])
+
+    plt.figure()
+    false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
+        validation_targets, validation_probabilities)
+    plt.plot(false_positive_rate, true_positive_rate, label="our model2")
+    plt.plot([0, 1], [0, 1], label="random classifier2")
+    _ = plt.legend(loc=2)
+    plt.show()
