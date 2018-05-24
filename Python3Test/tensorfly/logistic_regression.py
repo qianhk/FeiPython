@@ -197,6 +197,28 @@ def train_linear_classifier_model(
         training_targets,
         validation_examples,
         validation_targets):
+    """Trains a linear regression model of one feature.
+
+    In addition to training, this function also prints training progress information,
+    as well as a plot of the training and validation loss over time.
+
+    Args:
+      learning_rate: A `float`, the learning rate.
+      steps: A non-zero `int`, the total number of training steps. A training step
+        consists of a forward and backward pass using a single batch.
+      batch_size: A non-zero `int`, the batch size.
+      training_examples: A `DataFrame` containing one or more columns from
+        `california_housing_dataframe` to use as input features for training.
+      training_targets: A `DataFrame` containing exactly one column from
+        `california_housing_dataframe` to use as target for training.
+      validation_examples: A `DataFrame` containing one or more columns from
+        `california_housing_dataframe` to use as input features for validation.
+      validation_targets: A `DataFrame` containing exactly one column from
+        `california_housing_dataframe` to use as target for validation.
+
+    Returns:
+      A `LinearClassifier` object trained on the training data.
+    """
 
     periods = 10
     steps_per_period = steps / periods
@@ -204,7 +226,10 @@ def train_linear_classifier_model(
     # Create a linear classifier object.
     my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
     my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
-    # linear_classifier =  # YOUR CODE HERE: Construct the linear classifier.
+    linear_classifier = tf.estimator.LinearClassifier(
+        feature_columns=construct_feature_columns(training_examples),
+        optimizer=my_optimizer
+    )
 
     # Create input functions
     training_input_fn = lambda: my_input_fn(training_examples,
@@ -267,4 +292,3 @@ linear_classifier = train_linear_classifier_model(
     training_targets=training_targets,
     validation_examples=validation_examples,
     validation_targets=validation_targets)
-
