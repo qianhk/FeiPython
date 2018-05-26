@@ -7,7 +7,8 @@ import tensorflow as tf
 # import sklearn.datasets as datasets
 from sklearn import datasets
 
-data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.0)
+random_state = np.random.RandomState(2)
+data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
 # print('data=%s' % data)
 # print('target=%s' % target)
 
