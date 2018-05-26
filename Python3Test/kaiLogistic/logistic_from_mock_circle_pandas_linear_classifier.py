@@ -5,21 +5,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import pandas as pd
-import math
 from tensorflow.python.data import Dataset
-from sklearn import metrics
 from sklearn import datasets
+from sklearn import metrics
 
 pd.options.display.float_format = '{:.6f}'.format
 
-random_state = np.random.RandomState(2)
-data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
+data, target = datasets.make_circles(n_samples=100, factor=0.5, noise=0.05)
 # print('data=%s' % data)
-# print('target=%s' % target)
+print('target=%s' % target)
 
-plt.figure(figsize=(8, 12))
+# plt.scatter(data[:, 0], data[:, 1])
 
-data *= 5
+data *= 10
 
 class1_x = [x[0] for i, x in enumerate(data) if target[i] == 1]
 class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]
@@ -45,7 +43,7 @@ feature_columns = [tf.feature_column.numeric_column("x1"), tf.feature_column.num
 
 target_series = linear_dataframe["target"]
 
-my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.005)
+my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
 
 linear_classifier = tf.estimator.LinearClassifier(feature_columns=feature_columns, optimizer=my_optimizer)
 
@@ -112,7 +110,7 @@ evaluation_metrics = linear_classifier.evaluate(input_fn=predict_input_fn)
 
 print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
 print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
-# AUC 1.0   accuracy 1.0
+# AUC 0.5   accuracy 0.5
 
 plt.figure()
 false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
