@@ -9,27 +9,24 @@ import math
 from tensorflow.python.data import Dataset
 from sklearn import metrics
 from sklearn import datasets
+import kaiLogistic.logistic_from_mock_data_utils as kai
 
 pd.options.display.float_format = '{:.6f}'.format
 
 random_state = np.random.RandomState(2)
 data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
 # print('data=%s' % data)
-# print('target=%s' % target)
-
-plt.figure(figsize=(8, 12))
-
-data *= 5
+print('target=%s' % target)
 
 class1_x = [x[0] for i, x in enumerate(data) if target[i] == 1]
 class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]
 class2_x = [x[0] for i, x in enumerate(data) if target[i] != 1]
 class2_y = [x[1] for i, x in enumerate(data) if target[i] != 1]
 
-plt.scatter(class1_x, class1_y, c='r', marker='o')
-plt.scatter(class2_x, class2_y, c='b', marker='x')
-
-plt.show()
+# plt.figure(figsize=(8, 12))
+# plt.scatter(class1_x, class1_y, c='r', marker='o')
+# plt.scatter(class2_x, class2_y, c='b', marker='x')
+# plt.show()
 
 linear_dataframe = pd.DataFrame()
 linear_dataframe['x1'] = [x[0] for i, x in enumerate(data)]
@@ -83,17 +80,18 @@ def train_linear_regressor_model(steps, batch_size):
 
     print("Model training finished.")
 
-    plt.figure()
-    plt.ylabel("LogLoss")
-    plt.xlabel("Periods")
-    plt.title("LogLoss vs. Periods")
-    plt.tight_layout()
-    plt.plot(log_losses, label="log_losses")
-    plt.legend()
-    plt.show()
+    # plt.figure()
+    # plt.ylabel("LogLoss")
+    # plt.xlabel("Periods")
+    # plt.title("LogLoss vs. Periods")
+    # plt.tight_layout()
+    # plt.plot(log_losses, label="log_losses")
+    # plt.legend()
+    # plt.show()
+    return log_losses
 
 
-train_linear_regressor_model(5000, 10)
+log_losses = train_linear_regressor_model(500, 10)
 
 probabilities = linear_classifier.predict(input_fn=predict_input_fn)
 probabilities = np.array([item['probabilities'][1] for item in probabilities])
@@ -110,14 +108,19 @@ print('\n w1=%s w2=%s  bias=%s' % (weight_1, weight_2, bias))
 
 evaluation_metrics = linear_classifier.evaluate(input_fn=predict_input_fn)
 
-print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
+print("\nAUC on the validation set: %0.2f" % evaluation_metrics['auc'])
 print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
 # AUC 1.0   accuracy 1.0
 
-plt.figure()
-false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
-    target_series, probabilities)
-plt.plot(false_positive_rate, true_positive_rate, label="our model")
-plt.plot([0, 1], [0, 1], label="random classifier")
-_ = plt.legend(loc=2)
-plt.show()
+# plt.figure()
+# false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
+#     target_series, probabilities)
+# plt.plot(false_positive_rate, true_positive_rate, label="our model")
+# plt.plot([0, 1], [0, 1], label="random classifier")
+# _ = plt.legend(loc=2)
+# plt.show()
+
+kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
+                            , log_losses
+                            , target_series, probabilities
+                            , 'blobs pandas linear classifier')

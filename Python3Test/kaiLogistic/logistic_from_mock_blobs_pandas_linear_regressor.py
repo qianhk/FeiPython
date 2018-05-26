@@ -9,6 +9,7 @@ import math
 from tensorflow.python.data import Dataset
 from sklearn import metrics
 from sklearn import datasets
+import kaiLogistic.logistic_from_mock_data_utils as kai
 
 pd.options.display.float_format = '{:.6f}'.format
 
@@ -87,7 +88,7 @@ print('\n w1=%s w2=%s  bias=%s' % (weight_1, weight_2, bias))
 # result_dataframe["predictions"] = pd.Series(predictions)
 # result_dataframe["targets"] = target_series
 linear_dataframe['predictions'] = predictions
-print('\nresult dataframe:\n%s' % linear_dataframe)
+# print('\nresult dataframe:\n%s' % linear_dataframe)
 
 slope = -_w2 / _w1
 y_intercept = _b / _w1
@@ -100,3 +101,8 @@ for i in x1_series:
 plt.plot(x1_series, best_fit, 'g-')
 
 plt.show()
+
+kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
+                            , [root_mean_squared_error, root_mean_squared_error]
+                            , target_series, predictions
+                            , 'blobs pandas linear regressor')
