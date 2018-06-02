@@ -13,7 +13,7 @@ print('target=%s' % target)
 
 # plt.scatter(data[:, 0], data[:, 1])
 
-data *= 10
+data *= 5
 
 class1_x = [x[0] for i, x in enumerate(data) if target[i] == 1]
 class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]

@@ -42,7 +42,7 @@ feature_columns = [tf.feature_column.numeric_column("x1"), tf.feature_column.num
 
 target_series = linear_dataframe["target"]
 
-my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.005)
+my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
 
 linear_classifier = tf.estimator.LinearClassifier(feature_columns=feature_columns, optimizer=my_optimizer)
 
@@ -91,7 +91,7 @@ def train_linear_regressor_model(steps, batch_size):
     return log_losses
 
 
-log_losses = train_linear_regressor_model(500, 10)
+log_losses = train_linear_regressor_model(2000, 10)
 
 probabilities = linear_classifier.predict(input_fn=predict_input_fn)
 probabilities = np.array([item['probabilities'][1] for item in probabilities])
@@ -120,13 +120,14 @@ print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
 # _ = plt.legend(loc=2)
 # plt.show()
 
-visualization_frame = kai.make_visualization_frame(class1_x, class1_y, class2_x, class2_y)
-visualization_frame_input_fn = lambda: my_input_fn(visualization_frame, None, num_epochs=1, shuffle=False)
-probabilities = linear_classifier.predict(input_fn=visualization_frame_input_fn)
-probabilities = np.array([item['probabilities'][1] for item in probabilities])
-visualization_frame['probabilities'] = probabilities
+visualization_frame, visual_target_series = kai.make_visualization_frame(class1_x, class1_y, class2_x, class2_y)
+visualization_frame_input_fn = lambda: my_input_fn(visualization_frame, visual_target_series, num_epochs=1, shuffle=False)
+visual_probabilities = linear_classifier.predict(input_fn=visualization_frame_input_fn)
+visual_probabilities = np.array([item['probabilities'][1] for item in visual_probabilities])
+visualization_frame['probabilities'] = visual_probabilities
 
 kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
                             , log_losses
                             , target_series, probabilities
-                            , 'blobs pandas linear classifier', visualization_frame)
+                            , 'blobs pandas linear classifier'
+                            , visualization_frame)

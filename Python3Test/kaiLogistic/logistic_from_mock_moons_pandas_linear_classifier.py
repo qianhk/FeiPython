@@ -18,7 +18,7 @@ print('target=%s' % target)
 
 # plt.scatter(data[:, 0], data[:, 1])
 
-# data *= 10
+data *= 5
 
 class1_x = [x[0] for i, x in enumerate(data) if target[i] == 1]
 class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]
@@ -92,12 +92,12 @@ def train_linear_regressor_model(steps, batch_size):
     return log_losses
 
 
-log_losses = train_linear_regressor_model(5000, 10)
+log_losses = train_linear_regressor_model(2000, 10)
 
 probabilities = linear_classifier.predict(input_fn=predict_input_fn)
 probabilities = np.array([item['probabilities'][1] for item in probabilities])
 linear_dataframe['probabilities'] = probabilities
-print('\nresult dataframe:\n%s' % linear_dataframe)
+# print('\nresult dataframe:\n%s' % linear_dataframe)
 
 weight_1 = linear_classifier.get_variable_value('linear/linear_model/x1/weights')
 weight_2 = linear_classifier.get_variable_value('linear/linear_model/x2/weights')
@@ -121,7 +121,15 @@ print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
 # _ = plt.legend(loc=2)
 # plt.show()
 
+visualization_frame, visual_target_series = kai.make_visualization_frame(class1_x, class1_y, class2_x, class2_y)
+visualization_frame_input_fn = lambda: my_input_fn(visualization_frame, visual_target_series, num_epochs=1,
+                                                   shuffle=False)
+visual_probabilities = linear_classifier.predict(input_fn=visualization_frame_input_fn)
+visual_probabilities = np.array([item['probabilities'][1] for item in visual_probabilities])
+visualization_frame['probabilities'] = visual_probabilities
+
 kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
                             , log_losses
                             , target_series, probabilities
-                            , 'moons pandas linear classifier')
+                            , 'moons pandas linear classifier'
+                            , visualization_frame)
