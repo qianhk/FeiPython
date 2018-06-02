@@ -48,12 +48,13 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
         ax = plt.subplot(222)
         ax.plot(log_losses, color='m', linewidth=1)
 
-    ax = plt.subplot(224)
-    false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
-        target_series, probabilities)
-    ax.plot(false_positive_rate, true_positive_rate, c='c', label="our model")
-    ax.plot([0, 1], [0, 1], 'y:', label="random classifier")
-    # ax.legend(loc=2)
+    if target_series is not None and probabilities is not None:
+        ax = plt.subplot(224)
+        false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
+            target_series, probabilities)
+        ax.plot(false_positive_rate, true_positive_rate, c='c', label="our model")
+        ax.plot([0, 1], [0, 1], 'y:', label="random classifier")
+        # ax.legend(loc=2)
 
     plt.show()
 
