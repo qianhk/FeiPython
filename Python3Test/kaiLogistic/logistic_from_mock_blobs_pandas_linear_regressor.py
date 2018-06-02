@@ -20,7 +20,7 @@ data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, clust
 
 plt.figure(figsize=(8, 12))
 
-data *= 5
+data *= 1
 
 class1_x = [x[0] for i, x in enumerate(data) if target[i] == 1]
 class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]
@@ -46,7 +46,7 @@ feature_columns = [tf.feature_column.numeric_column("x1"), tf.feature_column.num
 
 target_series = linear_dataframe["target"]
 
-my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.0001)
+my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.005)
 
 linear_regressor = tf.estimator.LinearRegressor(feature_columns=feature_columns, optimizer=my_optimizer)
 
@@ -90,19 +90,28 @@ print('\n w1=%s w2=%s  bias=%s' % (weight_1, weight_2, bias))
 linear_dataframe['predictions'] = predictions
 # print('\nresult dataframe:\n%s' % linear_dataframe)
 
-slope = -_w2 / _w1
-y_intercept = _b / _w1
+slope = -_w1 / _w2
+y_intercept = _b / _w2
 
 x1_series = linear_dataframe['x1']
+test_x1 = [x1_series.min(), x1_series.max()]
 best_fit = []
-for i in x1_series:
+for i in test_x1:
     best_fit.append(slope * i + y_intercept)
 
-plt.plot(x1_series, best_fit, 'g-')
+plt.plot(test_x1, best_fit, 'g-')
 
 plt.show()
+
+visualization_frame, visual_target_series = kai.make_visualization_frame(class1_x, class1_y, class2_x, class2_y)
+visualization_frame_input_fn = lambda: my_input_fn(visualization_frame, visual_target_series, num_epochs=1,
+                                                   shuffle=False)
+visual_probabilities = linear_regressor.predict(input_fn=visualization_frame_input_fn)
+visual_probabilities = np.array([item['predictions'][0] for item in visual_probabilities])
+visualization_frame['probabilities'] = visual_probabilities
 
 kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
                             , [root_mean_squared_error, root_mean_squared_error]
                             , target_series, predictions
-                            , 'blobs pandas linear regressor')
+                            , 'blobs pandas linear regressor'
+                            , visualization_frame)

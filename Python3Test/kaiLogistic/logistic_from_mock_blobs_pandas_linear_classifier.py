@@ -42,7 +42,7 @@ feature_columns = [tf.feature_column.numeric_column("x1"), tf.feature_column.num
 
 target_series = linear_dataframe["target"]
 
-my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
+my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.05)
 
 linear_classifier = tf.estimator.LinearClassifier(feature_columns=feature_columns, optimizer=my_optimizer)
 

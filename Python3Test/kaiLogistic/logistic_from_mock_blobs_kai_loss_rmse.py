@@ -62,5 +62,5 @@ if __name__ == '__main__':
     kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
                                 , None
                                 , None, None
-                                , 'Test Loss'
+                                , 'Test RMSE Loss'
                                 , frame)
