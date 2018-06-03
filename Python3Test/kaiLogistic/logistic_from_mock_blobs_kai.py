@@ -24,13 +24,14 @@ y_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 result_matmul1 = tf.matmul(x_data1, w1)
 result_matmul2 = tf.matmul(x_data2, w2)
 result_add = result_matmul1 + result_matmul2 + b  # tf.add(tf.add(result_matmul1, result_matmul2), b)
-result_sigmoid = 1.0 / (1 + tf.exp(-result_add))
+result_sigmoid = 1.0 / (1 + tf.exp(tf.clip_by_value(-result_add, -1e6, 500)))
 
-first = tf.multiply(-target, tf.log(result_sigmoid))
-second = tf.multiply(1 - target, tf.log(1 - result_sigmoid))
+first = tf.multiply(-target, tf.log(tf.clip_by_value(result_sigmoid, 1e-6, 1.0)))
+second = tf.multiply(1 - target, tf.log(tf.clip_by_value(1 - result_sigmoid, 1e-6, 1.0)))
 loss = tf.reduce_mean(first - second)
 
-optimizer = tf.train.GradientDescentOptimizer(0.3)
+optimizer = tf.train.GradientDescentOptimizer(0.01)
+optimizer = tf.contrib.estimator.clip_gradients_by_norm(optimizer, 5.0)
 train = optimizer.minimize(loss)
 
 sess = tf.Session()
@@ -52,10 +53,11 @@ for step in range(2001):
     x2 = np.transpose([var_x2[rand_index]])
     y = np.transpose([target[rand_index]])
     sess.run(train, feed_dict={x_data1: x1, x_data2: x2, y_target: y})
-    if step % 20 == 0:
+    if step % 200 == 0:
         loss_value = sess.run(loss, feed_dict={x_data1: x1, x_data2: x2, y_target: y})
         loss_vec.append(loss_value)
-        print('step=%d w1=%s w2=%s b=%s loss=%s' % (step, sess.run(w1)[0, 0], sess.run(w2)[0, 0], sess.run(b), loss_value))
+        print('step=%d w1=%s w2=%s b=%s loss=%s' % (
+            step, sess.run(w1)[0, 0], sess.run(w2)[0, 0], sess.run(b), loss_value))
 
 [[_w1]] = sess.run(w1)
 [[_w2]] = sess.run(w2)
