@@ -90,8 +90,12 @@ print('\n w1=%s w2=%s  bias=%s' % (weight_1, weight_2, bias))
 linear_dataframe['predictions'] = predictions
 # print('\nresult dataframe:\n%s' % linear_dataframe)
 
+# w1 x + w2 y + b = 0.5
+
 slope = -_w1 / _w2
-y_intercept = _b / _w2
+y_intercept = (0.5 + -_b) / _w2
+
+print('k=%s b=%s' % (slope, y_intercept))
 
 x1_series = linear_dataframe['x1']
 test_x1 = [x1_series.min(), x1_series.max()]
