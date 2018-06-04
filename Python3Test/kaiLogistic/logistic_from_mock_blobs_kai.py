@@ -13,9 +13,9 @@ target = np.array(target, dtype=np.float32)
 # print('target=%s' % target)
 
 
-b = tf.Variable(1, dtype=tf.float32, name='b')
-w1 = tf.Variable([[1]], dtype=tf.float32, name='w1')
-w2 = tf.Variable([[1]], dtype=tf.float32, name='w2')
+b = tf.Variable(0, dtype=tf.float32, name='b')
+w1 = tf.Variable([[0]], dtype=tf.float32, name='w1')
+w2 = tf.Variable([[0]], dtype=tf.float32, name='w2')
 
 x_data1 = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 x_data2 = tf.placeholder(shape=[None, 1], dtype=tf.float32)
@@ -23,15 +23,30 @@ y_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 
 result_matmul1 = tf.matmul(x_data1, w1)
 result_matmul2 = tf.matmul(x_data2, w2)
-result_add = result_matmul1 + result_matmul2 + b  # tf.add(tf.add(result_matmul1, result_matmul2), b)
-result_sigmoid = 1.0 / (1 + tf.exp(tf.clip_by_value(-result_add, -1e6, 500)))
+result_add = result_matmul1 + result_matmul2 + b
+# result_add = tf.add(tf.add(result_matmul1, result_matmul2), b)
 
-first = tf.multiply(-target, tf.log(tf.clip_by_value(result_sigmoid, 1e-6, 1.0)))
-second = tf.multiply(1 - target, tf.log(tf.clip_by_value(1 - result_sigmoid, 1e-6, 1.0)))
-loss = tf.reduce_mean(first - second)
+use_base_method = 2
 
-optimizer = tf.train.GradientDescentOptimizer(0.01)
-optimizer = tf.contrib.estimator.clip_gradients_by_norm(optimizer, 5.0)
+if use_base_method == 1:
+    # result_sigmoid = 1.0 / (1 + tf.exp(tf.clip_by_value(-result_add, -1e6, 500)))
+    result_sigmoid = tf.sigmoid(result_add)
+    # first = tf.multiply(-target, tf.log(tf.clip_by_value(result_sigmoid, 1e-6, 1.0)))
+    first = -target * tf.log_sigmoid(result_add)
+    # second = tf.multiply(1 - target, tf.log(tf.clip_by_value(1 - result_sigmoid, 1e-6, 1.0)))
+    second = (1 - target) * tf.log(1 - result_sigmoid)
+    loss = first - second
+elif use_base_method == 2:
+    x = result_add
+    z = y_target
+    loss = tf.maximum(x, 0) - x * z + tf.log(1 + tf.exp(-abs(x)))
+else:
+    loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=result_add, labels=y_target)
+
+loss = tf.reduce_mean(loss)
+
+optimizer = tf.train.GradientDescentOptimizer(0.5)
+# optimizer = tf.contrib.estimator.clip_gradients_by_norm(optimizer, 5.0)
 train = optimizer.minimize(loss)
 
 sess = tf.Session()
@@ -41,7 +56,7 @@ var_x1 = np.array([x[0] for i, x in enumerate(data)])
 var_x2 = np.array([x[1] for i, x in enumerate(data)])
 
 data_amount = len(var_x1)
-batch_size = 10
+batch_size = 20
 
 loss_vec = []
 
@@ -63,6 +78,8 @@ for step in range(2001):
 [[_w2]] = sess.run(w2)
 _b = sess.run(b)
 print('last W1=%f W2=%f B=%f' % (_w1, _w2, _b))
+
+result_sigmoid = tf.sigmoid(result_add)
 
 x1 = np.transpose([var_x1])
 x2 = np.transpose([var_x2])
