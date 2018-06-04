@@ -39,7 +39,7 @@ if use_base_method == 1:
 elif use_base_method == 2:
     x = result_add
     z = y_target
-    loss = tf.maximum(x, 0) - x * z + tf.log(1 + tf.exp(-abs(x)))
+    loss = tf.maximum(x, 0) - x * z + tf.log(1 + tf.exp(-tf.abs(x)))
 else:
     loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=result_add, labels=y_target)
 

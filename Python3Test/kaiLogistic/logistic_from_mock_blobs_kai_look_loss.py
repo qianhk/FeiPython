@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import kaiLogistic.logistic_from_mock_data_utils as kai
 
 random_state = np.random.RandomState(2)
-data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
+data, target = datasets.make_blobs(n_samples=200, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
 # print('data=%s' % data)
-# print('target=%s' % target)
+print('target=%s' % target)
 
 var_x1 = [x[0] for i, x in enumerate(data)]
 var_x2 = [x[1] for i, x in enumerate(data)]
@@ -31,7 +31,7 @@ def sigmoid(z):
 
 
 def np_exp(array):
-    return np.exp(limit_max(array, 500))
+    return np.exp(limit_max(array, 300))
 
 
 # def log_cost(X, y):
@@ -43,26 +43,36 @@ def np_log(array):
     return np.log(limit_min(array, 0.00001))
 
 
+# 逻辑回归 损失函数 凸函数 证明
+# 证明LogLoss是凸函数
+# http://sofasofa.io/forum_main_post.php?postid=1000921
+# http://lotabout.me/2018/Logistic-Regression-Notes/
 def calc_loss(_b=0, _w1=0, _w2=0):
     result_mul1 = np.multiply(var_x1, _w1)
     result_mul2 = np.multiply(var_x2, _w2)
     result_add = result_mul1 + result_mul2 + _b
     result_sigmoid = sigmoid(result_add)
 
-    loss_type = 3
+    loss_type = 4
     if loss_type == 1 or loss_type == 2:
         if loss_type == 1:
             loss_array = np.square(result_add - target)  # linear regression square loss
         else:
             loss_array = np.square(result_sigmoid - target)  # logistic regression square loss
         return np.sqrt(np.mean(loss_array))
+    elif loss_type == 3:
+        h = np.zeros(len(target)) + _w1
+        first = np.multiply(-target, np_log(h))  # use _w1 as 自变量
+        second = np.multiply(1 - target, np_log(1 - h))
+        loss_array = first - second
+        return np.average(loss_array)
     else:
         # result_sigmoid = np.zeros(len(var_x1)) + _w1
         first = np.multiply(-target, np_log(result_sigmoid))  # logistic regression log loss
         second = np.multiply(1 - target, np_log(1 - result_sigmoid))
         loss_array = first - second
         # return np.sum(first - second) / len(first)
-        return np.average(first - second)
+        return np.average(loss_array)
 
 
 def predict(_x1, _x2, _b, _w1, _w2):
