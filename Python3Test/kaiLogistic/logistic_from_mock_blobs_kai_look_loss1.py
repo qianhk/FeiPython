@@ -86,7 +86,7 @@ def predict(_x1, _x2, _b, _w1, _w2):
 if __name__ == '__main__':
     loss_vec = []
 
-    max_n = 1
+    max_n = 5
     b = 0
     test_range = np.arange(-max_n, max_n, 0.01)
     for step in test_range:
