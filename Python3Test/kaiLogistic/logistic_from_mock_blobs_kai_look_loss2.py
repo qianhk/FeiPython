@@ -43,6 +43,9 @@ def np_log(array):
     return np.log(limit_min(array, 0.00001))
 
 
+loss_type = 4
+
+
 # 逻辑回归 损失函数 凸函数 证明
 # 证明LogLoss是凸函数
 # http://sofasofa.io/forum_main_post.php?postid=1000921
@@ -53,7 +56,6 @@ def calc_loss(_b=0, _w1=0, _w2=0):
     result_add = result_mul1 + result_mul2 + _b
     result_sigmoid = sigmoid(result_add)
 
-    loss_type = 4
     if loss_type == 1 or loss_type == 2:
         if loss_type == 1:
             loss_array = np.square(result_add - target)  # linear regression square loss
@@ -65,6 +67,9 @@ def calc_loss(_b=0, _w1=0, _w2=0):
         first = np.multiply(-target, np_log(h))  # use _w1 as 自变量
         second = np.multiply(1 - target, np_log(1 - h))
         loss_array = first - second
+        return np.average(loss_array)
+    elif loss_type == 4:
+        loss_array = np.maximum(result_add, 0) - result_add * target + np.log(1 + np.exp(-np.abs(result_add)))
         return np.average(loss_array)
     else:
         # result_sigmoid = np.zeros(len(var_x1)) + _w1
@@ -84,7 +89,7 @@ def predict(_x1, _x2, _b, _w1, _w2):
 if __name__ == '__main__':
     loss_vec = []
 
-    max_n = 200
+    max_n = 2000
     b = -10
     w2 = 20
     test_range = np.arange(-max_n, max_n, 1)
@@ -94,6 +99,7 @@ if __name__ == '__main__':
         # print('step=%d loss=%s' % (step, loss))
 
     plt.figure()
+    plt.title('loss type: ' + str(loss_type))
     plt.plot(test_range, loss_vec, 'g-')
     plt.show()
 
