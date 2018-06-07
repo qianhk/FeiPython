@@ -9,20 +9,10 @@ import kaiLogistic.logistic_from_mock_data_utils as kai
 random_state = np.random.RandomState(2)
 data, target = datasets.make_blobs(n_samples=200, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
 # print('data=%s' % data)
-print('target=%s' % target)
+# print('target=%s' % target)
 
 var_x1 = [x[0] for i, x in enumerate(data)]
 var_x2 = [x[1] for i, x in enumerate(data)]
-
-
-def limit_min(array, min_value):
-    tmp = np.array([x if x > min_value else min_value for x in array])
-    return tmp
-
-
-def limit_max(array, max_value):
-    tmp = np.array([x if x < max_value else max_value for x in array])
-    return tmp
 
 
 def sigmoid(z):
@@ -31,19 +21,14 @@ def sigmoid(z):
 
 
 def np_exp(array):
-    return np.exp(limit_max(array, 300))
+    return np.exp(np.minimum(array, 700))
 
-
-# def log_cost(X, y):
-#     first = np.multiply(-y, np.log(X))
-#     second = np.multiply(1 - y, np.log(1 - X))
-#     return np.sum(first - second) / len(X)
 
 def np_log(array):
-    return np.log(limit_min(array, 0.00001))
+    return np.log(np.maximum(array, 1e-250))
 
 
-loss_type = 4
+loss_type = 3
 
 
 # 逻辑回归 损失函数 凸函数 证明
@@ -63,20 +48,12 @@ def calc_loss(_b=0, _w1=0, _w2=0):
             loss_array = np.square(result_sigmoid - target)  # logistic regression square loss
         return np.sqrt(np.mean(loss_array))
     elif loss_type == 3:
-        h = np.zeros(len(target)) + _w1
-        first = np.multiply(-target, np_log(h))  # use _w1 as 自变量
-        second = np.multiply(1 - target, np_log(1 - h))
-        loss_array = first - second
-        return np.average(loss_array)
-    elif loss_type == 4:
-        loss_array = np.maximum(result_add, 0) - result_add * target + np.log(1 + np.exp(-np.abs(result_add)))
-        return np.average(loss_array)
-    else:
-        # result_sigmoid = np.zeros(len(var_x1)) + _w1
         first = np.multiply(-target, np_log(result_sigmoid))  # logistic regression log loss
         second = np.multiply(1 - target, np_log(1 - result_sigmoid))
         loss_array = first - second
-        # return np.sum(first - second) / len(first)
+        return np.average(loss_array)
+    else:
+        loss_array = np.maximum(result_add, 0) - result_add * target + np.log(1 + np.exp(-np.abs(result_add)))
         return np.average(loss_array)
 
 
@@ -89,7 +66,7 @@ def predict(_x1, _x2, _b, _w1, _w2):
 if __name__ == '__main__':
     loss_vec = []
 
-    max_n = 2000
+    max_n = 200
     b = -10
     w2 = 20
     test_range = np.arange(-max_n, max_n, 1)

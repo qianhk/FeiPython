@@ -13,35 +13,21 @@ print(var_x)
 print(var_y)
 
 
-def limit_min(array, min_value):
-    tmp = np.array([x if x > min_value else min_value for x in array])
-    return tmp
-
-
-def limit_max(array, max_value):
-    tmp = np.array([x if x < max_value else max_value for x in array])
-    return tmp
-
-
 def sigmoid(z):
     exp = np_exp(-z)
     return 1.0 / (1 + exp)
 
 
 def np_exp(array):
-    return np.exp(limit_max(array, 300))
+    return np.exp(np.minimum(array, 700))
 
-
-# def log_cost(X, y):
-#     first = np.multiply(-y, np.log(X))
-#     second = np.multiply(1 - y, np.log(1 - X))
-#     return np.sum(first - second) / len(X)
 
 def np_log(array):
-    return np.log(limit_min(array, 0.00001))
+    # return np.log(array)
+    return np.log(np.maximum(array, 1e-250))
 
 
-loss_type = 5
+loss_type = 3
 
 
 # 逻辑回归 损失函数 凸函数 证明
@@ -60,20 +46,12 @@ def calc_loss(_b=0, _w1=0):
             loss_array = np.square(result_sigmoid - var_y)  # logistic regression square loss
         return np.sqrt(np.mean(loss_array))
     elif loss_type == 3:
-        h = np.zeros(len(var_y)) + _w1
-        first = np.multiply(-var_y, np_log(h))  # use _w1 as 自变量
-        second = np.multiply(1 - var_y, np_log(1 - h))
+        first = np.multiply(-var_y, np_log(result_sigmoid))  # logistic regression log loss
+        second = (1 - var_y) * np_log(1 - result_sigmoid)
         loss_array = first - second
-        return np.average(loss_array)
-    elif loss_type == 4:
-        loss_array = np.maximum(result_add, 0) - result_add * var_y + np.log(1 + np.exp(-np.abs(result_add)))
         return np.average(loss_array)
     else:
-        # result_sigmoid = np.zeros(len(var_x1)) + _w1
-        first = np.multiply(-var_y, np_log(result_sigmoid))  # logistic regression log loss
-        second = np.multiply(1 - var_y, np_log(1 - result_sigmoid))
-        loss_array = first - second
-        # return np.sum(first - second) / len(first)
+        loss_array = np.maximum(result_add, 0) - result_add * var_y + np.log(1 + np.exp(-np.abs(result_add)))
         return np.average(loss_array)
 
 
@@ -86,7 +64,7 @@ def predict(_x1, _x2, _b, _w1, _w2):
 if __name__ == '__main__':
     loss_vec = []
 
-    max_n = 5
+    max_n = 1
     b = 0
     test_range = np.arange(-max_n, max_n, 0.01)
     for step in test_range:
