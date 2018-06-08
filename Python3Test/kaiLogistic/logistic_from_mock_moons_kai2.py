@@ -21,6 +21,12 @@ w3 = tf.Variable([[0]], dtype=tf.float32)
 w4 = tf.Variable([[0]], dtype=tf.float32)
 w5 = tf.Variable([[0]], dtype=tf.float32)
 w6 = tf.Variable([[0]], dtype=tf.float32)
+w7 = tf.Variable([[0]], dtype=tf.float32)
+w8 = tf.Variable([[0]], dtype=tf.float32)
+w9 = tf.Variable([[0]], dtype=tf.float32)
+w10 = tf.Variable([[0]], dtype=tf.float32)
+w11 = tf.Variable([[0]], dtype=tf.float32)
+w12 = tf.Variable([[0]], dtype=tf.float32)
 
 x_data1 = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 x_data2 = tf.placeholder(shape=[None, 1], dtype=tf.float32)
@@ -43,13 +49,21 @@ elif use_method == 3:
     result_4 = tf.matmul(x_data2 ** 2, w4)
     result_5 = x_data1 ** 3 * w5
     result_6 = x_data2 ** 3 * w6
-    result_add = b + result_1 + result_2 + result_3 + result_4 + result_5 + result_6
+    result_7 = x_data1 ** 4 * w7
+    result_8 = x_data2 ** 4 * w8
+    result_9 = x_data1 ** 5 * w9
+    result_10 = x_data2 ** 5 * w10
+    result_11 = x_data1 ** 6 * w11
+    result_12 = x_data2 ** 6 * w12
+    result_add = b + result_1 + result_2 + result_3 + result_4 + result_5 \
+                 + result_6 + result_7 + result_8 + result_9 + result_10 \
+                 + result_11 + result_12
 
 loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=result_add, labels=y_target)
 
 loss = tf.reduce_mean(loss)
 
-optimizer = tf.train.GradientDescentOptimizer(0.001)
+optimizer = tf.train.GradientDescentOptimizer(0.00001)
 train = optimizer.minimize(loss)
 
 sess = tf.Session()
@@ -63,7 +77,7 @@ batch_size = 20
 
 loss_vec = []
 
-for step in range(10001):
+for step in range(100001):
     rand_index = np.random.choice(data_amount, size=batch_size)
     tmp1 = var_x1[rand_index]
     tmp2 = [tmp1]
