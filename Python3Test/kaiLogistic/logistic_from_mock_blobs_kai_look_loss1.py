@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = [(-5, 1), (-20, 0), (-2, 1)]
+data = [(1, 0), (2, 0), (10, 1)]
 
 var_x = np.array([x for x, y in data])
 var_y = np.array([y for x, y in data])
@@ -27,7 +27,7 @@ def np_log(array):
     return np.log(np.maximum(array, 1e-250))
 
 
-loss_type = 3
+loss_type = 1
 
 
 # 逻辑回归 损失函数 凸函数 证明

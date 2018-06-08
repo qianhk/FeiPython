@@ -26,15 +26,15 @@ result_matmul2 = tf.matmul(x_data2, w2)
 result_add = result_matmul1 + result_matmul2 + b
 # result_add = tf.add(tf.add(result_matmul1, result_matmul2), b)
 
-use_base_method = 2
+use_base_method = 3
 
 if use_base_method == 1:
-    # result_sigmoid = 1.0 / (1 + tf.exp(tf.clip_by_value(-result_add, -1e6, 500)))
+    # result_sigmoid = 1.0 / (1 + tf.exp(tf.clip_by_value(-result_add, -1e250, 500)))
+    # first = tf.multiply(-y_target, tf.log(tf.clip_by_value(result_sigmoid, 1e-250, 1.0)))
+    # second = tf.multiply(1 - y_target, tf.log(tf.clip_by_value(1 - result_sigmoid, 1e-250, 1.0)))
     result_sigmoid = tf.sigmoid(result_add)
-    # first = tf.multiply(-target, tf.log(tf.clip_by_value(result_sigmoid, 1e-6, 1.0)))
-    first = -target * tf.log_sigmoid(result_add)
-    # second = tf.multiply(1 - target, tf.log(tf.clip_by_value(1 - result_sigmoid, 1e-6, 1.0)))
-    second = (1 - target) * tf.log(1 - result_sigmoid)
+    first = -y_target * tf.log_sigmoid(result_add)
+    second = (1 - y_target) * tf.log(1 - result_sigmoid)
     loss = first - second
 elif use_base_method == 2:
     x = result_add
