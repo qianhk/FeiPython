@@ -7,7 +7,7 @@ from sklearn import datasets
 import kaiLogistic.logistic_from_mock_data_utils as kai
 
 random_state = np.random.RandomState(2)
-data, target = datasets.make_blobs(n_samples=20, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
+data, target = datasets.make_blobs(n_samples=123, n_features=2, centers=2, cluster_std=2.0, random_state=random_state)
 target = np.array(target, dtype=np.float32)
 # print('data=%s' % data)
 # print('target=%s' % target)

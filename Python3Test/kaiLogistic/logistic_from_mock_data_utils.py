@@ -54,6 +54,8 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
             target_series, probabilities)
         ax.plot(false_positive_rate, true_positive_rate, c='c', label="our model")
         ax.plot([0, 1], [0, 1], 'y:', label="random classifier")
+        accuracy = np.equal(target_series, np.round(probabilities)).astype(np.float32).mean()
+        print('\n accuracy=%.4f%%' % (accuracy * 100))
         # ax.legend(loc=2)
 
     plt.show()

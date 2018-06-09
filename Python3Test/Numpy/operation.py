@@ -107,3 +107,6 @@ print('dot(M,N)=%s  type=%s' % (DOT_MN, type(DOT_MN)))
 
 DOT_MAT_MN = np.dot(np.mat(M), np.mat(N).T)
 print('dot(mat(M), mat(N).T)=%s  type=%s' % (DOT_MAT_MN, type(DOT_MAT_MN)))
+
+np_array = np.array([np.inf, -np.inf, np.nan, -128, 128])
+print('np.nan_to_num=%s' % np.nan_to_num(np_array))
