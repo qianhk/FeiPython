@@ -7,7 +7,7 @@ import tensorflow as tf
 # import sklearn.datasets as datasets
 from sklearn import datasets
 
-data, target = datasets.make_moons(200)
+data, target = datasets.make_moons(200, noise=0.1)
 # print('data=%s' % data)
 print('target=%s' % target)
 

@@ -7,7 +7,7 @@ from sklearn import datasets
 import kaiLogistic.logistic_from_mock_data_utils as kai
 
 random_state = np.random.RandomState(1)
-data, target = datasets.make_moons(200, noise=0.20, random_state=random_state)
+data, target = datasets.make_moons(200, noise=0.10, random_state=random_state)
 target = np.array(target, dtype=np.float32)
 # print('data=%s' % data)
 # print('target=%s' % target)
@@ -79,8 +79,12 @@ for step in range(10001):
 
 [[_w1]] = sess.run(w1)
 [[_w2]] = sess.run(w2)
+[[_w3]] = sess.run(w3)
+[[_w4]] = sess.run(w4)
+[[_w5]] = sess.run(w5)
+[[_w6]] = sess.run(w6)
 _b = sess.run(b)
-print('last W1=%f W2=%f B=%f' % (_w1, _w2, _b))
+print('last B=%f W1=%f W2=%f W3=%f W4=%f W5=%f W6=%f' % (_b, _w1, _w2, _w3, _w4, _w5, _w6))
 
 result_sigmoid = tf.sigmoid(result_add)
 

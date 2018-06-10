@@ -2,7 +2,6 @@
 # coding=utf-8
 
 import numpy as np
-import math
 import matplotlib.pyplot as plt
 from sklearn import metrics
 import pandas as pd

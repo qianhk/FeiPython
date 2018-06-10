@@ -9,7 +9,7 @@ from sklearn import datasets
 import kaiLogistic.logistic_from_mock_data_utils as kai
 
 random_state = np.random.RandomState(2)
-data, target = datasets.make_blobs(n_samples=20, n_features=2, centers=2, cluster_std=1.0, random_state=random_state)
+data, target = datasets.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.5, random_state=random_state)
 # print('data=%s' % data)
 # print('target=%s' % target)
 
@@ -22,10 +22,9 @@ class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]
 class2_x = [x[0] for i, x in enumerate(data) if target[i] != 1]
 class2_y = [x[1] for i, x in enumerate(data) if target[i] != 1]
 
-# ax = plt.subplot(212)
-# ax.scatter(class1_x, class1_y, c='r', marker='o')
-# ax.scatter(class2_x, class2_y, c='b', marker='x')
-#
-# plt.show()
+plt.scatter(class1_x, class1_y, c='r', marker='o')
+plt.scatter(class2_x, class2_y, c='b', marker='x')
+
+plt.show()
 
 kai.make_visualization_frame(class1_x, class1_y, class2_x, class2_y)
