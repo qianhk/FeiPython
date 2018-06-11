@@ -50,3 +50,10 @@ print('f(0)=%s  f(1)=%s' % (f(0), f(1)))
 pairs = [(1, 'one'), (2, 'two'), (3, 'three'), (4, 'four')]
 pairs.sort(key=lambda pair: pair[1])
 print('pairs=%s' % pairs)
+
+float_value = 123.4567
+string_value = 'abc'
+print('format={1:.2f} {0}'.format(string_value, float_value))
+
+print(f'try_{float_value} \'str\'={string_value} {{abc}}')
+print(f'试试_{float_value:.2f} str={string_value}')
