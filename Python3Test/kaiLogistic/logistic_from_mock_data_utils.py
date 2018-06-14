@@ -43,6 +43,13 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
     ax.scatter(class1_x, class1_y, c='r', marker='o')
     ax.scatter(class2_x, class2_y, c='b', marker='x')
 
+    min_x = min(min(class1_x), min(class2_x))
+    min_y = min(min(class1_y), min(class2_y))
+    max_x = max(max(class1_x), max(class2_x))
+    max_y = max(max(class1_y), max(class2_y))
+    accuracy = np.equal(target_series, np.round(probabilities)).astype(np.float32).mean()
+    ax.text((max_x + min_x) / 2, min_y - (max_y - min_y) / 25, f'accuracy: {accuracy * 100:.4f}%%')
+
     if log_losses is not None:
         ax = plt.subplot(222)
         ax.plot(log_losses, color='m', linewidth=1)
@@ -53,8 +60,10 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
             target_series, probabilities)
         ax.plot(false_positive_rate, true_positive_rate, c='c', label="our model")
         ax.plot([0, 1], [0, 1], 'y:', label="random classifier")
-        accuracy = np.equal(target_series, np.round(probabilities)).astype(np.float32).mean()
-        print('\n accuracy=%.4f%%' % (accuracy * 100))
+
+        auc = metrics.roc_auc_score(target_series, probabilities)
+        # print(f'\n accuracy={accuracy * 100:.4f}%%  auc={auc:.6f}')
+        ax.text(0.6, -0.02, f'auc: {auc:.6f}')
         # ax.legend(loc=2)
 
     plt.show()
