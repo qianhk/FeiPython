@@ -58,14 +58,14 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
         ax = plt.subplot(224)
         false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
             target_series, probabilities)
-        ax.plot(false_positive_rate, true_positive_rate, c='c', label="our model")
-        ax.plot([0, 1], [0, 1], 'y:', label="random classifier")
+        ax.plot(false_positive_rate, true_positive_rate, c='c', label="ROC Curve")
+        ax.plot([0, 1], [0, 1], 'y:', label="Random Classifier")
 
         auc = metrics.roc_auc_score(target_series, probabilities)
         # print(f'\n accuracy={accuracy * 100:.4f}%%  auc={auc:.6f}')
         ax.text(0.6, -0.02, f'auc: {auc:.6f}')
-        # ax.legend(loc=2)
 
+    # plt.legend() # 打开可开启图例显示
     plt.show()
 
 
