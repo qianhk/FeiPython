@@ -51,7 +51,7 @@ regularization_result = regularization_strength \
                         * (tf.abs(w1) + tf.abs(w2) + tf.abs(w3)
                            + tf.abs(w4) + tf.abs(w5) + tf.abs(w6))
 
-loss = tf.reduce_mean(loss) + tf.reduce_mean(regularization_result)
+loss = tf.reduce_mean(loss) + regularization_result[0, 0]
 
 optimizer = tf.train.GradientDescentOptimizer(0.001)
 train = optimizer.minimize(loss)
