@@ -50,8 +50,31 @@ regularization_strength = 0.1
 regularization_result = regularization_strength \
                         * (tf.abs(w1) + tf.abs(w2) + tf.abs(w3)
                            + tf.abs(w4) + tf.abs(w5) + tf.abs(w6))
+loss = tf.reduce_mean(loss)
 
-loss = tf.reduce_mean(loss) + regularization_result[0, 0]
+loss += regularization_result[0, 0]
+
+tf.add_to_collection(tf.GraphKeys.WEIGHTS, w1)
+tf.add_to_collection(tf.GraphKeys.WEIGHTS, w2)
+tf.add_to_collection(tf.GraphKeys.WEIGHTS, w3)
+tf.add_to_collection(tf.GraphKeys.WEIGHTS, w4)
+tf.add_to_collection(tf.GraphKeys.WEIGHTS, w5)
+tf.add_to_collection(tf.GraphKeys.WEIGHTS, w6)
+# tf_weights = tf.get_collection(tf.GraphKeys.WEIGHTS)
+# regular_loss = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)
+#
+# regularizer = tf.contrib.layers.l1_regularizer(regularization_strength)
+# tf.contrib.layers.apply_regularization(regularizer)
+# # loss += regularization_result[0, 0]
+# # W = [[w1], [w2], [w3]]
+# # W = tf.Variable(tf.random_normal([2, 1]))
+# # loss += tf.contrib.layers.l2_regularizer(0.1)(W)
+# regularization_loss = tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
+# loss += regularization_loss
+
+# with tf.variable_scope('var', initializer=tf.random_normal_initializer(),
+#                        regularizer=regularizer):
+#     weight = tf.get_variable('weight', shape=[8], initializer=tf.ones_initializer())
 
 optimizer = tf.train.GradientDescentOptimizer(0.001)
 train = optimizer.minimize(loss)
@@ -65,9 +88,11 @@ var_x2 = np.array([x[1] for i, x in enumerate(data)])
 data_amount = len(var_x1)
 batch_size = 20
 
+# print(f'tf_weights = {sess.run(tf_weights)}')
+
 loss_vec = []
 
-for step in range(100001):
+for step in range(20001):
     rand_index = np.random.choice(data_amount, size=batch_size)
     tmp1 = var_x1[rand_index]
     tmp2 = [tmp1]
@@ -80,6 +105,7 @@ for step in range(100001):
         loss_vec.append(loss_value)
         print('step=%d w1=%s w2=%s b=%s loss=%s' % (
             step, sess.run(w1)[0, 0], sess.run(w2)[0, 0], sess.run(b), loss_value))
+        # print(f'regular loss = {sess.run(regularization_loss)}')
 
 [[_w1]] = sess.run(w1)
 [[_w2]] = sess.run(w2)
