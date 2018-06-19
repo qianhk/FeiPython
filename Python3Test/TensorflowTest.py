@@ -92,6 +92,15 @@ def custom_polynomial(local_tf, value):
 
 print((sess.run(custom_polynomial(tf, 11))))
 
+alpha = 0.1
+val = tf.constant([[1, 2], [3, 4]], dtype=tf.float32)
+l1 = tf.contrib.layers.l1_regularizer(alpha)(val)
+l2 = tf.contrib.layers.l2_regularizer(alpha)(val)
+
+sess.run(tf.global_variables_initializer())
+
+print(f'\nl1={sess.run(l1)} l2={sess.run(l2)}')
+
 sess.close()
 
-print(13 / 4)
+print(f'\n{13 / 4}')
