@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(3)
+np.random.seed(0)
 
 b = tf.Variable(0, dtype=tf.float32)
 w1 = tf.Variable(0, dtype=tf.float32)
@@ -14,18 +14,18 @@ w3 = tf.Variable(0, dtype=tf.float32)
 w4 = tf.Variable(0, dtype=tf.float32)
 w5 = tf.Variable(0, dtype=tf.float32)
 
-method = 5
+method = 4
 
 if method <= 2:
     # n = 14
     # pie_size = np.arange(1, n + 1, 1)
     # pie_price = np.log(pie_size) * 10 + 2
     # # pie_price += np.random.normal(0, 1.5, [n])
-    pie_size = np.array([1, 2, 3, 4])
-    pie_price = np.log(pie_size) * 1 + np.random.normal(0, 0.2, [4])
+    pie_size = np.array([1, 1.5, 2, 2.5, 3], dtype=np.float32)
+    pie_price = np.log(pie_size) * 1 + np.random.normal(0, 0.2, [5])
 else:
-    pie_size = np.array([1, 2, 3, 4])
-    pie_price = np.log(pie_size) * 1 + np.random.normal(0, 0.2, [4])
+    pie_size = np.array([1, 1.5, 2, 2.5, 3], dtype=np.float32)
+    pie_price = np.log(pie_size) * 1 + np.random.normal(0, 0.2, [5])
 
 
 def loss_for_underfitting():
@@ -49,9 +49,14 @@ def loss_for_overfitting2():
 
 
 def loss_for_overfitting3():
-    target = b + w1 * pie_size + w2 * pie_size ** 2 + w3 * pie_size ** 3 + w4 * pie_size ** 4 + w5 * pie_size ** 5
+    target = b + w1 * pie_size + w2 * pie_size ** 2 + w3 * pie_size ** 3 + w4 * pie_size ** 4 + w5 * (pie_size + pie_size ** 2 / 2)
     return tf.reduce_mean(tf.square(target - pie_price))
 
+
+regularization_strength = 0.2
+regularization_result = regularization_strength \
+                        * (tf.abs(w1) + tf.abs(w2) + tf.abs(w3)
+                           + tf.abs(w4) + tf.abs(w5))
 
 if method == 1:
     learn_rate = 0.01
@@ -68,9 +73,10 @@ elif method == 3:
 elif method == 4:
     learn_rate = 0.00005
     train_step = 50001
-    loss = loss_for_overfitting2()
+    loss = loss_for_overfitting2()  # bias=0.1161179170012474 w1=0.12124264985322952 w2=0.09945085644721985 w3=0.01959029585123062 w4=-0.009515732526779175 loss=0.00019
+    # loss += regularization_result
 else:
-    learn_rate = 0.000001
+    learn_rate = 0.00005
     train_step = 50001
     loss = loss_for_overfitting3()
 
@@ -97,7 +103,7 @@ print(f'bias={_b} w1={_w1} w2={_w2} w3={_w3} w4={_w4} w5={_w5}')
 sess.close()
 
 best_fit = []
-x_array = np.linspace(-0.5, len(pie_size) + 0.5, 100)
+x_array = np.linspace(0, pie_size[len(pie_size) - 1] + 1, 100)
 for x in x_array:
     best_fit.append(_b + _w1 * x + _w2 * x ** 2 + _w3 * x ** 3 + _w4 * x ** 4 + _w5 * x ** 5)
 
