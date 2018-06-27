@@ -36,3 +36,5 @@ print("a's itemsize {}".format(b.itemsize))
 
 c = np.eye(4)
 print(('np.eye = %s' % c))
+
+print(f'a = {a}\na ** 2 = {a ** 2}\na ** 3 = {a ** 3}')

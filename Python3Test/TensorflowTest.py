@@ -101,6 +101,13 @@ sess.run(tf.global_variables_initializer())
 
 print(f'\nl1={sess.run(l1)} l2={sess.run(l2)}')
 
+a = np.array([1, 2, 3], dtype=np.float32)
+tf_v = tf.Variable(5, dtype=tf.float32)
+
+sess.run(tf.global_variables_initializer())
+
+print(f'a * tf_v = {sess.run(a * tf_v)}')
+
 sess.close()
 
 print(f'\n{13 / 4}')
