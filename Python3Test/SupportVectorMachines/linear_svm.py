@@ -21,6 +21,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn import datasets
 from tensorflow.python.framework import ops
+import SupportVectorMachines.svm_from_mock_data_utils as kai
 
 ops.reset_default_graph()
 
@@ -55,7 +56,7 @@ A = tf.Variable(tf.random_normal(shape=[2, 1]))
 b = tf.Variable(tf.random_normal(shape=[1, 1]))
 
 # Declare model operations
-model_output = tf.subtract(tf.matmul(x_data, A), b)
+model_output = tf.add(tf.matmul(x_data, A), b)
 
 # Declare vector L2 'norm' function squared
 l2_norm = tf.reduce_sum(tf.square(A))
@@ -74,7 +75,7 @@ prediction = tf.sign(model_output)
 accuracy = tf.reduce_mean(tf.cast(tf.equal(prediction, y_target), tf.float32))
 
 # Declare optimizer
-my_opt = tf.train.GradientDescentOptimizer(0.01)
+my_opt = tf.train.GradientDescentOptimizer(0.003)
 train_step = my_opt.minimize(loss)
 
 # Initialize variables
@@ -85,7 +86,7 @@ sess.run(init)
 loss_vec = []
 train_accuracy = []
 test_accuracy = []
-for i in range(500):
+for i in range(4000):
     rand_index = np.random.choice(len(x_vals_train), size=batch_size)
     rand_x = x_vals_train[rand_index]
     rand_y = np.transpose([y_vals_train[rand_index]])
@@ -104,7 +105,7 @@ for i in range(500):
         y_target: np.transpose([y_vals_test])})
     test_accuracy.append(test_acc_temp)
 
-    if (i + 1) % 100 == 0:
+    if (i + 1) % 500 == 0:
         print('Step #{} A = {}, b = {}'.format(
             str(i + 1),
             str(sess.run(A)),
@@ -116,7 +117,7 @@ for i in range(500):
 [[a1], [a2]] = sess.run(A)
 [[b]] = sess.run(b)
 slope = -a2 / a1
-y_intercept = b / a1
+y_intercept = -b / a1
 
 # Extract x1 and x2 vals
 x1_vals = [d[1] for d in x_vals]
@@ -132,6 +133,30 @@ setosa_y = [d[0] for i, d in enumerate(x_vals) if y_vals[i] == 1]
 not_setosa_x = [d[1] for i, d in enumerate(x_vals) if y_vals[i] == -1]
 not_setosa_y = [d[0] for i, d in enumerate(x_vals) if y_vals[i] == -1]
 
+visualization_frame, _ = kai.make_visualization_frame(setosa_x, setosa_y, not_setosa_x, not_setosa_y)
+series_x1 = visualization_frame['x1']
+series_x2 = visualization_frame['x2']
+x1 = np.transpose([series_x1])
+x2 = np.transpose([series_x2])
+
+xx = np.array([[d[0], x2[i, 0]] for i, d in enumerate(x1)])
+
+pre_value = sess.run(prediction, feed_dict={x_data: xx})
+visual_probabilities = pre_value.T[0]
+visualization_frame['probabilities'] = visual_probabilities
+
+def show_predict_probability(frame):
+    x1 = frame['x1']
+    x2 = frame['x2']
+    probability = frame['probabilities']
+    class1_x = [x1[i] for i, x in enumerate(probability) if x >= 0]
+    class1_y = [x2[i] for i, x in enumerate(probability) if x >= 0]
+    class2_x = [x1[i] for i, x in enumerate(probability) if x < 0]
+    class2_y = [x2[i] for i, x in enumerate(probability) if x < 0]
+    plt.scatter(class1_x, class1_y, c='r', alpha=0.2, marker='s')
+    plt.scatter(class2_x, class2_y, c='b', alpha=0.2, marker='s')
+
+
 # Plot data and line
 plt.plot(setosa_x, setosa_y, 'o', label='I. setosa')
 plt.plot(not_setosa_x, not_setosa_y, 'x', label='Non-setosa')
@@ -141,20 +166,23 @@ plt.legend(loc='lower right')
 plt.title('Sepal Length vs Pedal Width')
 plt.xlabel('Pedal Width')
 plt.ylabel('Sepal Length')
+show_predict_probability(visualization_frame)
 plt.show()
 
-# Plot train/test accuracies
-plt.plot(train_accuracy, 'k-', label='Training Accuracy')
-plt.plot(test_accuracy, 'r--', label='Test Accuracy')
-plt.title('Train and Test Set Accuracies')
-plt.xlabel('Generation')
-plt.ylabel('Accuracy')
-plt.legend(loc='lower right')
-plt.show()
+# # Plot train/test accuracies
+# plt.plot(train_accuracy, 'k-', label='Training Accuracy')
+# plt.plot(test_accuracy, 'r--', label='Test Accuracy')
+# plt.title('Train and Test Set Accuracies')
+# plt.xlabel('Generation')
+# plt.ylabel('Accuracy')
+# plt.legend(loc='lower right')
+# plt.show()
+#
+# # Plot loss over time
+# plt.plot(loss_vec, 'k-')
+# plt.title('Loss per Generation')
+# plt.xlabel('Generation')
+# plt.ylabel('Loss')
+# plt.show()
 
-# Plot loss over time
-plt.plot(loss_vec, 'k-')
-plt.title('Loss per Generation')
-plt.xlabel('Generation')
-plt.ylabel('Loss')
-plt.show()
+sess.close()
