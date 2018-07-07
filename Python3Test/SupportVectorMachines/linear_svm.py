@@ -139,11 +139,13 @@ not_setosa_y = [d[0] for i, d in enumerate(x_vals) if y_vals[i] == -1]
 visualization_frame, _ = kai.make_visualization_frame(setosa_x, setosa_y, not_setosa_x, not_setosa_y)
 series_x1 = visualization_frame['x1']
 series_x2 = visualization_frame['x2']
-x1 = np.transpose([series_x1])
-x2 = np.transpose([series_x2])
+# x1 = np.transpose([series_x1])
+# x2 = np.transpose([series_x2])
 
-xx = np.array([[x2[i, 0], d[0]] for i, d in enumerate(x1)])
+# xx = np.array([[x2[i, 0], d[0]] for i, d in enumerate(x1)])
+xx = np.c_[series_x2, series_x1]
 # print('xx=' + str(xx))
+
 
 pre_value = sess.run(prediction, feed_dict={x_data: xx})
 visual_probabilities = pre_value.T[0]

@@ -7,6 +7,8 @@ from sklearn import metrics
 import pandas as pd
 
 
+# numpy.flatten() 与 numpy.ravel()的区别
+# https://blog.csdn.net/iamzhangzhuping/article/details/52366568
 def make_visualization_frame(class1_x, class1_y, class2_x, class2_y):
     min_x = min(min(class1_x), min(class2_x))
     min_y = min(min(class1_y), min(class2_y))
@@ -19,8 +21,8 @@ def make_visualization_frame(class1_x, class1_y, class2_x, class2_y):
     ys = np.linspace(min_y, max_y, n)
     X1, X2 = np.meshgrid(xs, ys)
     frame = pd.DataFrame()
-    frame['x1'] = np.reshape(X1, n * n)
-    frame['x2'] = np.reshape(X2, n * n)
+    frame['x1'] = X1.ravel()  # np.reshape(X1, n * n)
+    frame['x2'] = X2.ravel()  # np.reshape(X2, n * n)
     # print(frame)
     return frame, np.zeros(n * n)
 
