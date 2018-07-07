@@ -16,7 +16,7 @@ def make_visualization_frame(class1_x, class1_y, class2_x, class2_y):
     max_y = max(max(class1_y), max(class2_y))
     # print('min=%s_%s max=%s_%s' % (min_x, min_y, max_x, max_y))
     # print('ceil min=%s_%s max=%s_%s' % (math.ceil(min_x), math.ceil(min_y), math.ceil(max_x), math.ceil(max_y)))
-    n = int(max(max_x - min_x, max_y - min_y) * 3)
+    n = int(max(max_x - min_x, max_y - min_y) * 100)
     xs = np.linspace(min_x, max_x, n)
     ys = np.linspace(min_y, max_y, n)
     X1, X2 = np.meshgrid(xs, ys)
@@ -24,7 +24,7 @@ def make_visualization_frame(class1_x, class1_y, class2_x, class2_y):
     frame['x1'] = X1.ravel()  # np.reshape(X1, n * n)
     frame['x2'] = X2.ravel()  # np.reshape(X2, n * n)
     # print(frame)
-    return frame, np.zeros(n * n)
+    return frame, np.zeros(n * n), X1, X2
 
 
 def show_visualization_data(class1_x, class1_y, class2_x, class2_y

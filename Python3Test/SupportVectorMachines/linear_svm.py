@@ -136,7 +136,7 @@ setosa_y = [d[0] for i, d in enumerate(x_vals) if y_vals[i] == 1]
 not_setosa_x = [d[1] for i, d in enumerate(x_vals) if y_vals[i] == -1]
 not_setosa_y = [d[0] for i, d in enumerate(x_vals) if y_vals[i] == -1]
 
-visualization_frame, _ = kai.make_visualization_frame(setosa_x, setosa_y, not_setosa_x, not_setosa_y)
+visualization_frame, _, X1, X2 = kai.make_visualization_frame(setosa_x, setosa_y, not_setosa_x, not_setosa_y)
 series_x1 = visualization_frame['x1']
 series_x2 = visualization_frame['x2']
 # x1 = np.transpose([series_x1])
@@ -151,26 +151,21 @@ pre_value = sess.run(prediction, feed_dict={x_data: xx})
 visual_probabilities = pre_value.T[0]
 visualization_frame['probabilities'] = visual_probabilities
 
+
 # print('predict=' + str(visual_probabilities))
-
-
 def show_predict_probability(frame):
-    x1 = frame['x1']
-    x2 = frame['x2']
     probability = frame['probabilities']
-    class1_x = [x1[i] for i, x in enumerate(probability) if x >= 0]
-    class1_y = [x2[i] for i, x in enumerate(probability) if x >= 0]
-    class2_x = [x1[i] for i, x in enumerate(probability) if x < 0]
-    class2_y = [x2[i] for i, x in enumerate(probability) if x < 0]
-    plt.scatter(class1_x, class1_y, c='r', alpha=0.2, marker='s')
-    plt.scatter(class2_x, class2_y, c='b', alpha=0.2, marker='s')
+    shape = X1.shape
+    new_probability = np.array(probability)
+    reshape_predict = new_probability.reshape(shape)
+    plt.contour(X1, X2, reshape_predict, 0)
 
 
 # Plot data and line
 plt.plot(setosa_x, setosa_y, 'o', label='I. setosa')
 plt.plot(not_setosa_x, not_setosa_y, 'x', label='Non-setosa')
-plt.plot(x1_vals, best_fit, 'r-', label='Linear Separator', linewidth=3)
-plt.ylim([0, 10])
+# plt.plot(x1_vals, best_fit, 'r-', label='Linear Separator', linewidth=3)
+# plt.ylim([0, 10])
 plt.legend(loc='lower right')
 plt.title('Sepal Length vs Pedal Width')
 plt.xlabel('Pedal Width')
