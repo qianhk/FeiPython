@@ -44,6 +44,9 @@ x_vals_test = x_vals[test_indices]
 y_vals_train = y_vals[train_indices]
 y_vals_test = y_vals[test_indices]
 
+# print('x_vals_train=' + str(x_vals_train))
+# print('y_vals_train=' + str(y_vals_train))
+
 # Declare batch size
 batch_size = 100
 
@@ -56,7 +59,7 @@ A = tf.Variable(tf.random_normal(shape=[2, 1]))
 b = tf.Variable(tf.random_normal(shape=[1, 1]))
 
 # Declare model operations
-model_output = tf.add(tf.matmul(x_data, A), b)
+model_output = tf.subtract(tf.matmul(x_data, A), b)
 
 # Declare vector L2 'norm' function squared
 l2_norm = tf.reduce_sum(tf.square(A))
@@ -86,7 +89,7 @@ sess.run(init)
 loss_vec = []
 train_accuracy = []
 test_accuracy = []
-for i in range(4000):
+for i in range(6000):
     rand_index = np.random.choice(len(x_vals_train), size=batch_size)
     rand_x = x_vals_train[rand_index]
     rand_y = np.transpose([y_vals_train[rand_index]])
@@ -117,7 +120,7 @@ for i in range(4000):
 [[a1], [a2]] = sess.run(A)
 [[b]] = sess.run(b)
 slope = -a2 / a1
-y_intercept = -b / a1
+y_intercept = b / a1
 
 # Extract x1 and x2 vals
 x1_vals = [d[1] for d in x_vals]
@@ -139,11 +142,15 @@ series_x2 = visualization_frame['x2']
 x1 = np.transpose([series_x1])
 x2 = np.transpose([series_x2])
 
-xx = np.array([[d[0], x2[i, 0]] for i, d in enumerate(x1)])
+xx = np.array([[x2[i, 0], d[0]] for i, d in enumerate(x1)])
+# print('xx=' + str(xx))
 
 pre_value = sess.run(prediction, feed_dict={x_data: xx})
 visual_probabilities = pre_value.T[0]
 visualization_frame['probabilities'] = visual_probabilities
+
+# print('predict=' + str(visual_probabilities))
+
 
 def show_predict_probability(frame):
     x1 = frame['x1']
