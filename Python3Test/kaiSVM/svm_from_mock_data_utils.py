@@ -30,7 +30,7 @@ def make_visualization_frame(class1_x, class1_y, class2_x, class2_y):
 def show_visualization_data(class1_x, class1_y, class2_x, class2_y
                             , log_losses
                             , target_series, probabilities,
-                            title=None, visualization_frame=None):
+                            title=None, visualization_frame=None, x1=None, x2=None):
     # print('\nvisualization_frame=\n%s\n' % visualization_frame)
 
     plt.figure(figsize=(10, 8))
@@ -39,8 +39,8 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
         plt.title(title)
 
     ax = plt.subplot(121)
-    if visualization_frame is not None:
-        show_predict_probability(ax, visualization_frame)
+    if visualization_frame is not None and x1 is not None and x2 is not None:
+        show_predict_probability(ax, visualization_frame, x1, x2)
 
     ax.scatter(class1_x, class1_y, c='r', marker='o')
     ax.scatter(class2_x, class2_y, c='b', marker='x')
@@ -71,19 +71,9 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
     plt.show()
 
 
-def show_predict_probability(ax, frame):
-    x1 = frame['x1']
-    x2 = frame['x2']
+def show_predict_probability(ax, frame, X1, X2):
     probability = frame['probabilities']
-    class1_x = [x1[i] for i, x in enumerate(probability) if x >= 0.5]
-    class1_y = [x2[i] for i, x in enumerate(probability) if x >= 0.5]
-    class2_x = [x1[i] for i, x in enumerate(probability) if x < 0.5]
-    class2_y = [x2[i] for i, x in enumerate(probability) if x < 0.5]
-    ax.scatter(class1_x, class1_y, c='r', alpha=0.2, marker='s')
-    ax.scatter(class2_x, class2_y, c='b', alpha=0.2, marker='s')
-
-# ax1 = plt.subplot2grid((3,3), (0,0), colspan=3)
-# ax2 = plt.subplot2grid((3,3), (1,0), colspan=2)
-# ax3 = plt.subplot2grid((3,3), (1, 2), rowspan=2)
-# ax4 = plt.subplot2grid((3,3), (2, 0))
-# ax5 = plt.subplot2grid((3,3), (2, 1))
+    shape = X1.shape
+    new_probability = np.array(probability)
+    reshape_predict = new_probability.reshape(shape)
+    ax.contour(X1, X2, reshape_predict, 0)

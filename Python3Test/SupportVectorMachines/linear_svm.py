@@ -21,7 +21,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn import datasets
 from tensorflow.python.framework import ops
-import SupportVectorMachines.svm_from_mock_data_utils as kai
+import kaiSVM.svm_from_mock_data_utils as kai
 
 ops.reset_default_graph()
 
@@ -146,6 +146,7 @@ series_x2 = visualization_frame['x2']
 xx = np.c_[series_x2, series_x1]
 # print('xx=' + str(xx))
 
+probabilities = sess.run(prediction, feed_dict={x_data: x_vals}).T[0]
 
 pre_value = sess.run(prediction, feed_dict={x_data: xx})
 visual_probabilities = pre_value.T[0]
@@ -161,19 +162,23 @@ def show_predict_probability(frame):
     plt.contour(X1, X2, reshape_predict, 0)
 
 
-# Plot data and line
-plt.plot(setosa_x, setosa_y, 'o', label='I. setosa')
-plt.plot(not_setosa_x, not_setosa_y, 'x', label='Non-setosa')
-# plt.plot(x1_vals, best_fit, 'r-', label='Linear Separator', linewidth=3)
-# plt.ylim([0, 10])
-plt.xlim([series_x1[0] - 0.1, series_x1[len(series_x1) - 1] + 0.1])
-plt.ylim([series_x2[0] - 0.1, series_x2[len(series_x2) - 1] + 0.1])
-plt.legend(loc='lower right')
-plt.title('Sepal Length vs Pedal Width')
-plt.xlabel('Pedal Width')
-plt.ylabel('Sepal Length')
-show_predict_probability(visualization_frame)
-plt.show()
+# # Plot data and line
+# plt.plot(setosa_x, setosa_y, 'o', label='I. setosa')
+# plt.plot(not_setosa_x, not_setosa_y, 'x', label='Non-setosa')
+# # plt.plot(x1_vals, best_fit, 'r-', label='Linear Separator', linewidth=3)
+# # plt.ylim([0, 10])
+# plt.xlim([series_x1[0] - 0.1, series_x1[len(series_x1) - 1] + 0.1])
+# plt.ylim([series_x2[0] - 0.1, series_x2[len(series_x2) - 1] + 0.1])
+# plt.legend(loc='lower right')
+# plt.title('Sepal Length vs Pedal Width')
+# plt.xlabel('Pedal Width')
+# plt.ylabel('Sepal Length')
+# show_predict_probability(visualization_frame)
+# plt.show()
+
+kai.show_visualization_data(setosa_x, setosa_y, not_setosa_x, not_setosa_y, loss_vec
+                            , y_vals, probabilities, 'linear svm'
+                            , visualization_frame, X1, X2)
 
 # # Plot train/test accuracies
 # plt.plot(train_accuracy, 'k-', label='Training Accuracy')
