@@ -76,4 +76,6 @@ def show_predict_probability(ax, frame, X1, X2):
     shape = X1.shape
     new_probability = np.array(probability)
     reshape_predict = new_probability.reshape(shape)
+    # ax.contour(X1, X2, reshape_predict)
     ax.contour(X1, X2, reshape_predict, 0)
+    # ax.contour(X1, X2, reshape_predict, [0, 1])

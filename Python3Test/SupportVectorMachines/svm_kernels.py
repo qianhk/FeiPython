@@ -51,7 +51,10 @@ b = tf.Variable(tf.random_normal(shape=[1, batch_size]))
 gamma = tf.constant(-50.0)
 dist = tf.reduce_sum(tf.square(x_data), 1)
 dist = tf.reshape(dist, [-1, 1])
-sq_dists = tf.add(tf.subtract(dist, tf.multiply(2., tf.matmul(x_data, tf.transpose(x_data)))), tf.transpose(dist))
+x_square = tf.matmul(x_data, tf.transpose(x_data))
+subtract = tf.subtract(dist, tf.multiply(2., x_square))
+sq_dists = tf.add(subtract, tf.transpose(dist))
+# sq_dists = tf.add(tf.subtract(dist, tf.multiply(2., tf.matmul(x_data, tf.transpose(x_data)))), tf.transpose(dist))
 my_kernel = tf.exp(tf.multiply(gamma, tf.abs(sq_dists)))
 
 # Compute SVM Model
@@ -63,10 +66,10 @@ loss = tf.negative(tf.subtract(first_term, second_term))
 
 # Create Prediction Kernel
 # Linear prediction kernel
-# my_kernel = tf.matmul(x_data, tf.transpose(prediction_grid))
+# pred_kernel = tf.matmul(x_data, tf.transpose(prediction_grid))
 
 # Gaussian (RBF) prediction kernel
-rA = tf.reshape(tf.reduce_sum(tf.square(x_data), 1), [-1, 1])
+rA = dist  # tf.reshape(tf.reduce_sum(tf.square(x_data), 1), [-1, 1])
 rB = tf.reshape(tf.reduce_sum(tf.square(prediction_grid), 1), [-1, 1])
 pred_sq_dist = tf.add(tf.subtract(rA, tf.multiply(2., tf.matmul(x_data, tf.transpose(prediction_grid)))),
                       tf.transpose(rB))
