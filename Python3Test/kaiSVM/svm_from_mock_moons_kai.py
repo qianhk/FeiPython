@@ -6,10 +6,10 @@ import tensorflow as tf
 from sklearn import datasets
 import kaiSVM.svm_from_mock_data_utils as kai
 
-batch_size = 100
+batch_size = 200
 
 random_state = np.random.RandomState(2)
-data, target = datasets.make_circles(n_samples=100, factor=0.5, noise=0.15, random_state=random_state)
+data, target = datasets.make_moons(200, noise=0.10, random_state=random_state)
 target = np.array([1 if y == 1 else -1 for y in target], dtype=np.float32)
 # print('data=%s' % data)
 # print('target=%s' % target)
@@ -20,8 +20,7 @@ y_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 b = tf.Variable(tf.random_normal(shape=[1, batch_size]))
 
 # Gaussian (RBF) kernel
-gamma = tf.constant(10, dtype=tf.float32)
-gamma = tf.negative(gamma)
+gamma = tf.constant(-50.0)
 dist = tf.reduce_sum(tf.square(x_data), 1)
 dist = tf.reshape(dist, [-1, 1])
 x_square = tf.matmul(x_data, tf.transpose(x_data))
