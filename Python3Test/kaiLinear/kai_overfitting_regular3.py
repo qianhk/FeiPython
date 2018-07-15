@@ -62,7 +62,7 @@ elif method == 2:
     learn_rate = 0.0001
     loss = loss_for_overfitting()
 elif method == 10:
-    learn_rate = 0.05
+    learn_rate = 0.01
     loss = loss_for_overfitting_scale()
 else:
     learn_rate = 0.001
@@ -84,14 +84,14 @@ while True:
         loss_value = sess.run(loss)
         time_str = time.strftime("%H:%M:%S", time.localtime())  # %Y-%m-%d %H:%M:%S
         print(f'step={step} time={time_str} loss={loss_value:0.8f}'
-              + f' bias={sess.run(b):0.2f} w1={sess.run(w1):0.2f} w2={sess.run(w2):0.2f} w3={sess.run(w3):0.2f} w4={sess.run(w4):0.2f}')
+              + f' bias={sess.run(b):0.4f} w1={sess.run(w1):0.4f} w2={sess.run(w2):0.4f} w3={sess.run(w3):0.4f} w4={sess.run(w4):0.4f}')
         if loss_value < 0.01:
             break
         if last_loss1 == last_loss2 and last_loss2 == loss_value:
             break
         last_loss2 = last_loss1
         last_loss1 = loss_value
-    if step >= 10_0000:
+    if step >= 50_0000:
         break
 
 _b = sess.run(b)
@@ -105,7 +105,7 @@ print(f'bias={_b} w1={_w1} w2={_w2} w3={_w3} w4={_w4}')
 sess.close()
 
 best_fit = []
-x_array = np.linspace(pie_size[0] - 2, pie_size[len(pie_size) - 1] + 2, 10000)
+x_array = np.linspace(pie_size[0] - 1, pie_size[len(pie_size) - 1] + 1, 10000)
 for x in x_array:
     if method < 10:
         best_fit.append(_b + _w1 * x + _w2 * x ** 2 + _w3 * x ** 3 + _w4 * x ** 4)
