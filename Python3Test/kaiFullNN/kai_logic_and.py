@@ -4,19 +4,22 @@
 import numpy as np
 import tensorflow as tf
 
+x0 = np.array([1, 1, 1, 1], dtype=np.float32)
 x1 = np.array([0, 0, 1, 1], dtype=np.float32)
 x2 = np.array([0, 1, 0, 1], dtype=np.float32)
 target = np.array([0, 0, 0, 1], dtype=np.float32)
 
-w1 = tf.Variable(0, dtype=tf.float32, name='w1')
+X = np.vstack((x0, x1, x2))
+Target = np.matrix(target)
 
-w2 = tf.Variable(0, dtype=tf.float32, name='w2')
+print(Target)
+print(X)
 
-b = tf.Variable(0., name='b', dtype=tf.float32)
+W = tf.Variable(np.zeros((1, 3)), dtype=tf.float32)
 
-z_array = w1 * x1 + w2 * x2 + b
+Z = tf.matmul(W, X)
 
-loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=z_array, labels=target)
+loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=Z, labels=Target)
 loss = tf.reduce_mean(loss)
 optimizer = tf.train.GradientDescentOptimizer(200)
 train = optimizer.minimize(loss)
@@ -30,13 +33,11 @@ for step in range(401):
     sess.run(train)
     loss_vec.append(sess.run(loss))
     if step % 100 == 0:
-        print('step=%d w1=%f w2=%f bias=%f loss=%s' % (
-            step, sess.run(w1), sess.run(w2), sess.run(b), sess.run(loss)))
+        print('step=%d W=%s loss=%s' % (
+            step, sess.run(W), sess.run(loss)))
 
-_w1 = sess.run(w1)
-_w2 = sess.run(w2)
-_b = sess.run(b)
+_W = sess.run(W).ravel()
 
 sess.close()
 
-print('last W1=%f W2=%f B=%f' % (_w1, _w2, _b))
+print(f"last type(W)={type(_W)} W={_W}")
