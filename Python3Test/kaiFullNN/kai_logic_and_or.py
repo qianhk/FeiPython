@@ -18,17 +18,19 @@ def test_logic_and_or(arg_type):
         print('test type error')
         return
 
-    X = np.vstack((x0, x1, x2))
-    Target = np.matrix(target)
+    m_x = np.vstack((x0, x1, x2))
+    m_target = np.matrix(target)
 
-    print(Target)
-    print(X)
+    print(m_x)
+    print(m_target)
 
-    W = tf.Variable(np.zeros((1, 3)), dtype=tf.float32)
+    v_w = tf.Variable(np.zeros((1, 3)), dtype=tf.float32)
+    h_x = tf.placeholder(shape=[3, None], dtype=tf.float32)
+    h_target = tf.placeholder(shape=[1, None], dtype=tf.float32)
 
-    Z = tf.matmul(W, X)
+    z = tf.matmul(v_w, h_x)
 
-    loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=Z, labels=Target)
+    loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=z, labels=h_target)
     loss = tf.reduce_mean(loss)
     optimizer = tf.train.GradientDescentOptimizer(200)
     train = optimizer.minimize(loss)
@@ -39,19 +41,20 @@ def test_logic_and_or(arg_type):
     loss_vec = []
 
     for step in range(401):
-        sess.run(train)
-        loss_vec.append(sess.run(loss))
+        feed_dict = {h_x: m_x, h_target: m_target}
+        sess.run(train, feed_dict)
+        loss_vec.append(sess.run(loss, feed_dict=feed_dict))
         if step % 100 == 0:
             print('step=%d W=%s loss=%s' % (
-                step, sess.run(W), sess.run(loss)))
+                step, sess.run(v_w), sess.run(loss, feed_dict=feed_dict)))
 
-    _W = sess.run(W).ravel()
+    _w = sess.run(v_w).ravel()
 
     sess.close()
 
     # And W=[-75.  50.  50.]
     # Or [-25.  50.  50.]
-    print(f"last type(W)={type(_W)} W={_W}")
+    print(f"last type(W)={type(_w)} W={_w}")
 
 
 if __name__ == '__main__':
