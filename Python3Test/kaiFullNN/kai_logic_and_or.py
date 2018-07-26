@@ -18,17 +18,17 @@ def test_logic_and_or(arg_type):
         print('test type error')
         return
 
-    m_x = np.vstack((x0, x1, x2))
-    m_target = np.matrix(target)
+    m_x = np.vstack((x0, x1, x2)).T
+    m_target = np.matrix(target).T
 
     print(m_x)
     print(m_target)
 
-    v_w = tf.Variable(np.zeros((1, 3)), dtype=tf.float32)
-    h_x = tf.placeholder(shape=[3, None], dtype=tf.float32)
-    h_target = tf.placeholder(shape=[1, None], dtype=tf.float32)
+    v_w = tf.Variable(np.zeros((3, 1)), dtype=tf.float32)
+    h_x = tf.placeholder(shape=[None, 3], dtype=tf.float32)
+    h_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 
-    z = tf.matmul(v_w, h_x)
+    z = tf.matmul(h_x, v_w)
 
     loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=z, labels=h_target)
     loss = tf.reduce_mean(loss)
@@ -46,7 +46,7 @@ def test_logic_and_or(arg_type):
         loss_vec.append(sess.run(loss, feed_dict=feed_dict))
         if step % 100 == 0:
             print('step=%d W=%s loss=%s' % (
-                step, sess.run(v_w), sess.run(loss, feed_dict=feed_dict)))
+                step, sess.run(v_w).ravel(), sess.run(loss, feed_dict=feed_dict)))
 
     _w = sess.run(v_w).ravel()
 
