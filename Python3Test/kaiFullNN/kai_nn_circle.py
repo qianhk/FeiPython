@@ -17,23 +17,24 @@ m_x = data.T
 # print('target=%s' % target)
 
 hidden_layer_nodes = 2
-v_w1 = tf.Variable(np.zeros((hidden_layer_nodes, 2)), dtype=tf.float32)
+v_w1 = tf.Variable(np.zeros((2, hidden_layer_nodes)), dtype=tf.float32)
 b1 = tf.Variable(np.zeros(hidden_layer_nodes), dtype=tf.float32)
-v_w2 = tf.Variable(np.zeros((1, 2)), dtype=tf.float32)
+v_w2 = tf.Variable(np.zeros((hidden_layer_nodes, 1)), dtype=tf.float32)
 b2 = tf.Variable(np.zeros(1), dtype=tf.float32)
-h_x = tf.placeholder(shape=[2, None], dtype=tf.float32)
-h_target = tf.placeholder(shape=[1, None], dtype=tf.float32)
 
-z2 = tf.add(tf.matmul(v_w1, h_x), b1)  # (hidden_layer_nodes, N)
-a2 = tf.sigmoid(z2)
+h_x = tf.placeholder(shape=[None, 2], dtype=tf.float32)
+h_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 
-a22 = tf.stack([x0, a2])
+z2 = tf.add(tf.matmul(h_x, v_w1), b1)  # (N, hidden_layer_nodes)
+# a2 = tf.nn.sigmoid(z2)
+a2 = tf.nn.relu(z2)
 
-z3 = tf.matmul(v_w2, a22)  # (1, N)
-a3 = tf.sigmoid(z2)  # (1, N)
+z3 = tf.matmul(a2, v_w2)  # (N, 1)
+# a3 = tf.nn.sigmoid(z2)
+a3 = tf.nn.relu(z2)
 
-loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=z3, labels=h_target)
-
+# loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=z3, labels=h_target)
+loss = tf.square(h_target - a3)
 loss = tf.reduce_mean(loss)
 
 optimizer = tf.train.GradientDescentOptimizer(0.1)
