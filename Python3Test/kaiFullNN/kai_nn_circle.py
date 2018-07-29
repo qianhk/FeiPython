@@ -4,6 +4,7 @@
 import numpy as np
 import tensorflow as tf
 from sklearn import datasets
+import kaiFullNN.nn_from_mock_data_utils as kai
 
 random_state = np.random.RandomState(2)
 data, target = datasets.make_circles(n_samples=100, factor=0.5, noise=0.01, random_state=random_state)
@@ -14,7 +15,7 @@ data *= 5
 # m_x = np.vstack((x0, data.T))
 m_x = data
 
-target = np.matrix(target).T
+m_target = np.matrix(target).T
 
 # print('data=%s' % m_x)
 # print('target=%s' % target)
@@ -33,7 +34,7 @@ a2 = tf.nn.sigmoid(z2)
 # a2 = tf.nn.relu(z2)
 
 z3 = tf.matmul(a2, v_w2)  # (N, 1)
-a3 = tf.nn.sigmoid(z2)
+a3 = tf.nn.sigmoid(z3)
 # a3 = tf.nn.relu(z2)
 
 # loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=z3, labels=h_target)
@@ -58,18 +59,38 @@ for step in range(1001):
     # x1 = np.transpose(tmp2)
     # x2 = np.transpose([var_x2[rand_index]])
     # y = np.transpose([target[rand_index]])
-    feed = {h_x: m_x, h_target: target}
+    feed = {h_x: m_x, h_target: m_target}
     sess.run(train, feed_dict=feed)
     if step % 1000 == 0:
         loss_value = sess.run(loss, feed_dict=feed)
         loss_vec.append(loss_value)
-        print(f'step={step} w1={sess.run(v_w1).ravel()} w2={sess.run(v_w2).ravel()} b2={sess.run(b2)} loss={loss_value}')
+        print(f'step={step} w1={sess.run(v_w1).ravel()} b1={sess.run(b1)}'
+              f' w2={sess.run(v_w2).ravel()} b2={sess.run(b2)} loss={loss_value}')
 
 _w1 = sess.run(v_w1).ravel()
 _w2 = sess.run(v_w2).ravel()
 print(f'last w1={_w1} w2={_w2}')
 
-# print('target=\n%s\n predict=\n%s' % (target, probabilities))
+probabilities = sess.run(a3, feed_dict={h_x: m_x}).ravel()
 
+print('target=\n%s\n predict=\n%s' % (target, probabilities))
+
+class1_x = [x[0] for i, x in enumerate(data) if target[i] == 1]
+class1_y = [x[1] for i, x in enumerate(data) if target[i] == 1]
+class2_x = [x[0] for i, x in enumerate(data) if target[i] != 1]
+class2_y = [x[1] for i, x in enumerate(data) if target[i] != 1]
+
+visualization_frame, _ = kai.make_visualization_frame(class1_x, class1_y, class2_x, class2_y)
+series_x1 = visualization_frame['x1']
+series_x2 = visualization_frame['x2']
+xx = np.c_[series_x1, series_x2]
+visual_probabilities = sess.run(a3, feed_dict={h_x: xx}).ravel()
+visualization_frame['probabilities'] = visual_probabilities
 
 sess.close()
+
+kai.show_visualization_data(class1_x, class1_y, class2_x, class2_y
+                            , loss_vec
+                            , target, probabilities
+                            , 'circle classify by nn'
+                            , visualization_frame)
