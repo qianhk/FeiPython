@@ -7,7 +7,7 @@ from sklearn import datasets
 import kaiFullNN.nn_from_mock_data_utils as kai
 
 random_state = np.random.RandomState(2)
-data, target = datasets.make_circles(n_samples=100, factor=0.5, noise=0.1, random_state=random_state)
+data, target = datasets.make_moons(200, noise=0.10, random_state=random_state)
 target = np.array(target, dtype=np.float32)
 data *= 5
 m_x = data
@@ -26,8 +26,8 @@ b2 = tf.Variable(tf.random_normal([1], 1), dtype=tf.float32)
 h_x = tf.placeholder(shape=[None, 2], dtype=tf.float32)
 h_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 
-activation = tf.nn.sigmoid
-# activation = tf.nn.relu
+# activation = tf.nn.sigmoid
+activation = tf.nn.relu
 
 z2 = tf.add(tf.matmul(h_x, v_w1), b1)  # (N, hidden_layer_nodes)
 a2 = activation(z2)
