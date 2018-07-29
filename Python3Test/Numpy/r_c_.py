@@ -15,3 +15,9 @@ print()
 print(c)
 print()
 print(np.c_[c, a])
+
+ones = np.array([1, 2])
+print(f'ones={ones}')
+
+print(f'c+1={c+ones}')
+print(f'c add 1={np.add(c, ones)}')
