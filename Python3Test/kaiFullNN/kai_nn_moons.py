@@ -26,8 +26,8 @@ b2 = tf.Variable(tf.random_normal([1], 1), dtype=tf.float32)
 h_x = tf.placeholder(shape=[None, 2], dtype=tf.float32)
 h_target = tf.placeholder(shape=[None, 1], dtype=tf.float32)
 
-# activation = tf.nn.sigmoid
-activation = tf.nn.relu
+activation = tf.nn.sigmoid
+# activation = tf.nn.relu
 
 z2 = tf.add(tf.matmul(h_x, v_w1), b1)  # (N, hidden_layer_nodes)
 a2 = activation(z2)
@@ -47,6 +47,7 @@ if activation == tf.nn.relu:
     total_count = 2_0001
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+# optimizer = tf.train.AdamOptimizer(learning_rate)
 train = optimizer.minimize(loss)
 
 sess = tf.Session()

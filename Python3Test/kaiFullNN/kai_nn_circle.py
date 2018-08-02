@@ -40,13 +40,15 @@ output = a3
 loss = tf.square(h_target - output)
 loss = tf.reduce_mean(loss)
 
-learning_rate = 10.0
+learning_rate = 1.0
 total_count = 10001
 if activation == tf.nn.relu:
-    learning_rate = 0.005
+    learning_rate = 0.001
     total_count = 2_0001
 
-optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+optimizer = tf.train.AdamOptimizer(learning_rate)
 train = optimizer.minimize(loss)
 
 sess = tf.Session()
