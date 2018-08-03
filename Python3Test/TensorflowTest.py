@@ -108,6 +108,9 @@ sess.run(tf.global_variables_initializer())
 
 print(f'a * tf_v = {sess.run(a * tf_v)}')
 
-sess.close()
+weights = tf.constant([[1.0, -2], [-3, 4]]);
+regular_l1 = tf.contrib.layers.l1_regularizer(0.5)(weights)
+regular_l2 = tf.contrib.layers.l2_regularizer(0.5)(weights)
+print(f'\nregular_l1={sess.run(regular_l1)} regular_l2={sess.run(regular_l2)}');
 
-print(f'\n{13 / 4}')
+sess.close()
