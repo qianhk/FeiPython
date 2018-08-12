@@ -57,3 +57,6 @@ print('format={1:.2f} {0}'.format(string_value, float_value))
 
 print(f'try_{float_value} \'str\'={string_value} {{abc}}')
 print(f'试试_{float_value:.2f} str={string_value}')
+
+for i in range(10):
+    print('i: ' + str(i))
