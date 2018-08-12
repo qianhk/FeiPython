@@ -43,9 +43,10 @@ def train(mnist):
 
     train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
 
-    train_op = tf.group(train_step, variables_averages_op)
-    # with tf.control_dependencies([train_step, variables_averages_op]):
-    #     train_op = tf.no_op(name='train')
+    # train_op = tf.group(train_step, variables_averages_op)
+    with tf.control_dependencies([train_step, variables_averages_op]):
+        train_op = tf.no_op(name='train')
+
 
     saver = tf.train.Saver()
     with tf.Session() as sess:
@@ -53,7 +54,7 @@ def train(mnist):
         for i in range(TRAINING_STEPS):
             # print(f'global_step={sess.run(global_step)}')
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
-            _, loss_value, step = sess.run([train_step, loss, global_step], feed_dict={x: xs, y_: ys})
+            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
             if i % 1000 == 0:
                 print(f'After {step} training step(s), loss on training is {loss_value}')
                 saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME), global_step=global_step)
