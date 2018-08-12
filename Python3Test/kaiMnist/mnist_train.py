@@ -13,7 +13,7 @@ LEARNING_RATE_BASE = 0.8
 LEARNING_RATE_DECAY = 0.99
 
 REGULARIZATION_RATE = 0.0001
-TRAINING_STEPS = 30000
+TRAINING_STEPS = 11000
 MOVING_AVERAGE_DECAY = 0.99
 
 
@@ -44,7 +44,7 @@ def train(mnist):
 
     average_y = inference(x, variable_averages, weights1, biases1, weights2, biases2)
 
-    cross_entroy = tf.nn.sparse_softmax_cross_entropy_with_logits(y, tf.argmax(y_, 1))
+    cross_entroy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=tf.argmax(y_, 1))
     cross_entroy_mean = tf.reduce_mean(cross_entroy)
 
     regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
@@ -62,6 +62,20 @@ def train(mnist):
     correct_prediction = tf.equal(tf.argmax(average_y, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        validate_feed = {x: mnist.validation.images, y_: mnist.validation.labels}
+
+        for i in range(TRAINING_STEPS):
+            if i % 1000 == 0:
+                validate_acc = sess.run(accuracy, feed_dict=validate_feed)
+                print(f'After {i} training step(s), validation accuracy using average model is {validate_acc}')
+            xs, ys = mnist.train.next_batch(BATCH_SIZE)
+            sess.run(train_op, feed_dict={x: xs, y_: ys})
+
+        test_feed = {x: mnist.test.images, y_: mnist.test.labels}
+        test_acc = sess.run(accuracy, feed_dict=test_feed)
+        print(f'After {TRAINING_STEPS} training step(s), test accuracy using average model is {test_acc}')
 
 
 def main(argv=None):
