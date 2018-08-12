@@ -74,7 +74,8 @@ def train(mnist):
             # print(f'global_step={sess.run(global_step)}')
             if i % 1000 == 0:
                 validate_acc = sess.run(accuracy, feed_dict=validate_feed)
-                print(f'After {i} training step(s), validation accuracy is {validate_acc}')
+                print(f'After {i} training step(s), validation accuracy is {validate_acc}'
+                      f' learning_rate={sess.run(learning_rate)}')
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
             sess.run(train_step, feed_dict={x: xs, y_: ys})
 

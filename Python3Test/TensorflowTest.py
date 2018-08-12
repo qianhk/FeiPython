@@ -93,7 +93,7 @@ def custom_polynomial(local_tf, value):
 print((sess.run(custom_polynomial(tf, 11))))
 
 alpha = 0.1
-val = tf.constant([[1, 2], [3, 4]], dtype=tf.float32)
+val = tf.constant([[2, 3], [1, 4]], dtype=tf.float32)
 l1 = tf.contrib.layers.l1_regularizer(alpha)(val)
 l2 = tf.contrib.layers.l2_regularizer(alpha)(val)
 
@@ -111,6 +111,12 @@ print(f'a * tf_v = {sess.run(a * tf_v)}')
 weights = tf.constant([[1.0, -2], [-3, 4]]);
 regular_l1 = tf.contrib.layers.l1_regularizer(0.5)(weights)
 regular_l2 = tf.contrib.layers.l2_regularizer(0.5)(weights)
-print(f'\nregular_l1={sess.run(regular_l1)} regular_l2={sess.run(regular_l2)}');
+print(f'\nregular_l1={sess.run(regular_l1)} regular_l2={sess.run(regular_l2)}')
+
+val_val = sess.run(val)
+print('\nval=' + str(val_val))
+print(f'\nargmax_0={val_val.argmax(0)} argmax_1={val_val.argmax(1)}')
+print('\ntf.argmax(val, 0)=' + str(sess.run(tf.argmax(val, 0))))
+print('tf.argmax(val, 1)=' + str(sess.run(tf.argmax(val, 1))))
 
 sess.close()
