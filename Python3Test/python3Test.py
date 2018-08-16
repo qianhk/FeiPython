@@ -60,3 +60,41 @@ print(f'试试_{float_value:.2f} str={string_value}')
 
 for i in range(10):
     print('i: ' + str(i))
+
+a, b = 5, 10
+print(f'\na={a} b={b}')
+
+a, b = b, a
+print(f'after swap a={a} b={b}')
+
+a = ['Python', 'is', 'awesome']
+print(f'{" ".join(a)}')
+
+a = [1, 2, 3, 1, 2, 3, 2, 2, 4, 5, 1]
+print(f'a.count={a.count(8)} a.count(2)={a.count(2)} c.count(1)={a.count(1)} max={max(set(a), key = a.count)}')
+
+from collections import Counter
+
+cnt = Counter(a)
+print(f'cnt.most_common(3)={cnt.most_common(3)}')
+
+str1 = 'abcb'
+str2 = 'bacb'
+
+print(f'is Anagram: {Counter(str1) == Counter(str2)}')
+
+a = 'abcdefghijklmnopqrstuvwxyz'
+print(f'{a[::-1]}')
+
+# for char in reversed(a):
+#     print(char)
+
+num = 123456789
+print(int(str(num)[::-1]))
+
+a = [5, 4, 3, 2, 1]
+print(f'a[::-1]={a[::-1]}')
+
+b = 6
+print(f'4 < b < 7 : {4 < b < 7}')
+print(f'1 == b < 20 : {1 == b < 20}')
