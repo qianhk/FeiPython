@@ -98,3 +98,93 @@ print(f'a[::-1]={a[::-1]}')
 b = 6
 print(f'4 < b < 7 : {4 < b < 7}')
 print(f'1 == b < 20 : {1 == b < 20}')
+
+
+def product(pa, pb):
+    return pa * pb
+
+
+def add(pa, pb):
+    return pa + pb
+
+
+b = False
+print((product if b else add)(5, 7))
+
+b = a
+b[0] = 10
+print(f'a={a} b={b}')
+
+b = a[:]
+b[0] = 20
+print(f'a={a} b={b}')
+
+b = list(a)
+b[0] = 30
+print(f'a={a} b={b}')
+
+b = a.copy()
+b[0] = 40
+print(f'a={a} b={b}')
+
+from copy import deepcopy
+
+b = deepcopy(a)
+b[0] = 50
+print(f'a={a} b={b}')
+
+d = {'a': 1, 'b': 2}
+print(f"d.get(\'c\', 3) = {d.get('b')}")
+
+d = {'apple': 10, 'orange': 20, 'banana': 5, 'rotten tomato': 1}
+print(d.items())
+print(sorted(d.items(), key=lambda x: x[1]))
+
+from operator import itemgetter
+
+print(sorted(d.items(), key=itemgetter(1)))
+
+print(sorted(d, key=d.get))
+
+for el in a:
+    if el == 0:
+        break
+else:
+    print('did not break out of for loop')
+
+items = [2, 'hello', 3, 4.6]
+print(f"'_'.join(map(str, items)) = {', '.join(map(str, items))}")
+
+d2 = {'abc': 3, 'def': 4}
+
+print({**d, **d2})
+
+print(dict(d.items() | d2.items()))
+
+d.update(d2)
+print(f'd.update(d2)={d}')
+
+d3 = {'abc': 3, 'def': 6}
+d.update(d3)
+print(f'd.update(d3)={d}')
+
+
+def minIndex(plist):
+    return min(range(len(plist)), key=plist.__getitem__)
+
+
+def maxIndex(plist):
+    return max(range(len(plist)), key=plist.__getitem__)
+
+
+lst = [20, 40, 10, 30]
+print(f'minIndex(list)={minIndex(lst)} maxIndex(list)={maxIndex(lst)}')
+
+items = [2, 2, 3, 3, 1]
+new_items = list(set(items))
+print(f'new_items={new_items}')
+
+from collections import OrderedDict
+
+new_items = OrderedDict.fromkeys(items).keys()
+print(f'new_items={list(new_items)}')
