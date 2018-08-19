@@ -172,7 +172,7 @@ def run_training():
             if step % 100 == 0:
                 # Print status to stdout.
                 duration = time.time() - start_time
-                print('Step %d: loss = %.2f (%.3f sec)' % (step, loss_value, duration))
+                # print('Step %d: loss = %.2f (%.3f sec)' % (step, loss_value, duration))
                 # Update the events file.
                 summary_str = sess.run(summary, feed_dict=feed_dict)
                 summary_writer.add_summary(summary_str, step)
@@ -221,13 +221,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '--learning_rate',
         type=float,
-        default=0.01,
+        default=0.1,
         help='Initial learning rate.'
     )
     parser.add_argument(
         '--max_steps',
         type=int,
-        default=2000,
+        default=10000,
         help='Number of steps to run trainer.'
     )
     parser.add_argument(

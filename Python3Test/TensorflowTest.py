@@ -97,6 +97,11 @@ val = tf.constant([[2, 3], [1, 4]], dtype=tf.float32)
 l1 = tf.contrib.layers.l1_regularizer(alpha)(val)
 l2 = tf.contrib.layers.l2_regularizer(alpha)(val)
 
+A = [[0.8, 0.6, 0.3], [0.1, 0.6, 0.4]]
+B = [1, 1]
+top_k = tf.nn.top_k(A, 2)
+in_top_k = tf.nn.in_top_k(A, B, 1)
+
 sess.run(tf.global_variables_initializer())
 
 print(f'\nl1={sess.run(l1)} l2={sess.run(l2)}')
@@ -118,5 +123,9 @@ print('\nval=' + str(val_val))
 print(f'\nargmax_0={val_val.argmax(0)} argmax_1={val_val.argmax(1)}')
 print('\ntf.argmax(val, 0)=' + str(sess.run(tf.argmax(val, 0))))
 print('tf.argmax(val, 1)=' + str(sess.run(tf.argmax(val, 1))))
+
+values, indices = sess.run(top_k)
+print(f'\ntop_k: values={values}\nindices={indices}')
+print(f'in_top_k = {sess.run(in_top_k)}')
 
 sess.close()
