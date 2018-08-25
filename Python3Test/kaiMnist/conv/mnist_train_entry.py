@@ -3,8 +3,9 @@
 
 import os
 import tensorflow as tf
+import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
-import kaiMnist.full.mnist_inference as mnist_inference
+import kaiMnist.conv.mnist_inference as mnist_inference
 
 BATCH_SIZE = 100
 LEARNING_RATE_BASE = 0.8
@@ -14,12 +15,13 @@ REGULARIZATION_RATE = 0.0001
 TRAINING_STEPS = 11000
 MOVING_AVERAGE_DECAY = 0.99
 
-MODEL_SAVE_PATH = '../../logs/kaiFullMnist/'
+MODEL_SAVE_PATH = '../../logs/kaiConvMnist/'
 MODEL_NAME = 'model.ckpt'
 
 
 def train(mnist):
-    x = tf.placeholder(tf.float32, [None, mnist_inference.INPUT_NODE], name='x-input')
+    x = tf.placeholder(tf.float32
+                       , [None, mnist_inference.IMAGE_SIZE, mnist_inference.IMAGE_SIZE, mnist_inference.NUMBER_CHANNELS], name='x-input')
     y_ = tf.placeholder(tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-input')
 
     regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
@@ -47,14 +49,14 @@ def train(mnist):
     with tf.control_dependencies([train_step, variables_averages_op]):
         train_op = tf.no_op(name='train')
 
-
     saver = tf.train.Saver()
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         for i in range(TRAINING_STEPS):
             # print(f'global_step={sess.run(global_step)}')
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
-            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
+            reshaped_xs = np.reshape(xs, (None, mnist_inference.IMAGE_SIZE, mnist_inference.IMAGE_SIZE, mnist_inference.NUMBER_CHANNELS))
+            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: reshaped_xs, y_: ys})
             if i % 1000 == 0:
                 print(f'After {step} training step(s), loss on training is {loss_value}')
                 saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME), global_step=global_step)
