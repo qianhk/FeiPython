@@ -5,6 +5,20 @@ import os
 import numpy as np
 import sys
 
+# (foo)bar\1   # （x）匹配 x 并记住匹配（捕获组） \1 表示括号内的表达式
+
+# 123foobarfoo234
+
+# 123foobar234
+
+# RedApple   # Red(?=Apple)
+
+# RedOrange
+
+# 像(010)88886666，或022-22334455，或02912345678等  # \(0\d{2}\)[- ]?\d{8}|0\d{2}[- ]?\d{8}
+
+# 也能匹配010)12345678或(022-87654321这样的“不正确”的格式  # \(?0\d{2}[) -]?\d{8}
+
 print('PATH=')
 print(os.environ['PATH'])
 
