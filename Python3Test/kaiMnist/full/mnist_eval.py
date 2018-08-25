@@ -5,8 +5,8 @@ import time
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
-import kaiMnist.mnist_inference as mnist_inference
-import kaiMnist.mnist_train_entry as mnist_train
+import kaiMnist.full.mnist_inference as mnist_inference
+import kaiMnist.full.mnist_train_entry as mnist_train
 
 EVAL_INTERVAL_SECS = 5
 
@@ -44,7 +44,7 @@ def evaluate(mnist):
 
 def main(argv=None):
     print(f'argv={argv}')
-    mnist = input_data.read_data_sets('../cache/mnist', one_hot=True)
+    mnist = input_data.read_data_sets('../../cache/mnist', one_hot=True)
     evaluate(mnist)
 
 

@@ -3,7 +3,7 @@
 
 from tensorflow.examples.tutorials.mnist import input_data
 
-mnist = input_data.read_data_sets('../cache/mnist/', one_hot=True)
+mnist = input_data.read_data_sets('../../cache/mnist/', one_hot=True)
 train = mnist.train
 print(f'Train data size: {train.num_examples}')
 print(f'Train data size: {mnist.validation.num_examples}')

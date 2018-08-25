@@ -86,7 +86,7 @@ def train(mnist):
 
 def main(argv=None):
     print(f'argv={argv}')
-    mnist = input_data.read_data_sets('../cache/mnist', one_hot=True)
+    mnist = input_data.read_data_sets('../../cache/mnist', one_hot=True)
     train(mnist)
 
 

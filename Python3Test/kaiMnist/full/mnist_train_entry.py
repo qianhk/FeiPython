@@ -4,7 +4,7 @@
 import os
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-import kaiMnist.mnist_inference as mnist_inference
+import kaiMnist.full.mnist_inference as mnist_inference
 
 BATCH_SIZE = 100
 LEARNING_RATE_BASE = 0.8
@@ -14,7 +14,7 @@ REGULARIZATION_RATE = 0.0001
 TRAINING_STEPS = 11000
 MOVING_AVERAGE_DECAY = 0.99
 
-MODEL_SAVE_PATH = '../logs/kaiMnist/'
+MODEL_SAVE_PATH = '../../logs/kaiMnist/'
 MODEL_NAME = 'model.ckpt'
 
 
@@ -64,7 +64,7 @@ def train(mnist):
 
 def main(argv=None):
     print(f'argv={argv}')
-    mnist = input_data.read_data_sets('../cache/mnist', one_hot=True)
+    mnist = input_data.read_data_sets('../../cache/mnist', one_hot=True)
     train(mnist)
 
 
