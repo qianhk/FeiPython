@@ -43,7 +43,10 @@ def inference(input_tensor, train, regularizer):
 
     pool_shape = pool2.get_shape().as_list()
     nodes = pool_shape[1] * pool_shape[2] * pool_shape[3]
-    reshaped = tf.reshape(pool2, [pool_shape[0], nodes])
+    pool_shape0 = pool_shape[0]
+    if pool_shape0 is None:
+        pool_shape0 = -1
+    reshaped = tf.reshape(pool2, [pool_shape0, nodes])
 
     with tf.variable_scope('layer5-fc1'):
         fc1_weights = tf.get_variable('weight', [nodes, FC_SIZE], initializer=tf.truncated_normal_initializer(stddev=0.1))
