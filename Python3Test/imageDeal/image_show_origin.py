@@ -9,6 +9,15 @@ image_raw_data = jpgFile.read()
 
 dest_dir = '../logs/imageDeal/'
 
+
+def resize_300(p_image_data_float32, method, file_suffix):
+    _resize_300_300_image = tf.image.resize_images(p_image_data_float32, [300, 300], method=method)
+    _resize_300_300_image_uint8 = tf.image.convert_image_dtype(_resize_300_300_image, dtype=tf.uint8)
+    _encoded_image = tf.image.encode_jpeg(_resize_300_300_image_uint8, quality=None)
+    with tf.gfile.GFile(f'{dest_dir}/cat_300_300_{file_suffix}.jpg', 'wb') as _f:
+        _f.write(_encoded_image.eval())
+
+
 with tf.Session() as sess:
     image_data = tf.image.decode_jpeg(image_raw_data)
     image_data_eval = image_data.eval()
@@ -29,21 +38,31 @@ with tf.Session() as sess:
               f' {image_data_type_float32_eval[0, 0]}')
     plt.show()
 
-    # encoded_image = tf.image.encode_png(image_data, compression=3)  # encode必须用uint8 ，不然全黑
-    encoded_image = tf.image.encode_jpeg(image_data, quality=None)  # encode必须用uint8 ，不然报错
+    # encoded_image = tf.image.encode_png(image_data, compression=3)  # encode必须用uint8 ，不然全黑或者报错
+    encoded_image = tf.image.encode_jpeg(image_data, quality=None)  # encode必须用uint8 ，不然全黑或者报错
     encoded_image_eval = encoded_image.eval()
     with tf.gfile.GFile(dest_dir + 'cat_compression.jpg', 'wb') as f:
         f.write(encoded_image.eval())
 
-    # resize_300_300_image = tf.image.resize_images(image_data, [300, 300], method=0)
-    # print(f'resize_300_300_image shape={resize_300_300_image.get_shape()}')
-    # resize_300_300_image_eval = resize_300_300_image.eval()
-    # print(f'resize_300_300_image_eval.shape={resize_300_300_image_eval.shape}')
-    # plt.imshow(resize_300_300_image_eval)
-    # plt.title('resize_300_300_image_eval')
-    # plt.show()
+    resize_300_300_image = tf.image.resize_images(image_data_type_float32, [300, 300], method=0)
+    print(f'resize_300_300_image shape={resize_300_300_image.get_shape()}')
+    resize_300_300_image_eval = resize_300_300_image.eval()
+    print(f'resize_300_300_image_eval.shape={resize_300_300_image_eval.shape}')
+    plt.imshow(resize_300_300_image_eval)
+    plt.title(f'resize_300 {resize_300_300_image_eval.shape} {resize_300_300_image_eval.dtype} {resize_300_300_image_eval[0, 0]}')
+    plt.show()
 
-    # encoded_image = tf.image.encode_jpeg(resized)
-    # encoded_image = tf.image.encode_jpeg(tf.image.convert_image_dtype(resized, dtype=tf.uint8))
-    # with tf.gfile.GFile(dest_dir + 'cat_300_300.jpg', 'wb') as f:
-    #     f.write(encoded_image.eval())
+    resize_300_300_image_uint8 = tf.image.convert_image_dtype(resize_300_300_image, dtype=tf.uint8)
+    encoded_image = tf.image.encode_jpeg(resize_300_300_image_uint8, quality=None)
+    with tf.gfile.GFile(dest_dir + 'cat_300_300_BILINEAR.jpg', 'wb') as f:
+        f.write(encoded_image.eval())
+
+    resize_300_300_image = tf.image.resize_images(image_data_type_float32, [300, 300], method=1)
+    resize_300_300_image_uint8 = tf.image.convert_image_dtype(resize_300_300_image, dtype=tf.uint8)
+    encoded_image = tf.image.encode_jpeg(resize_300_300_image_uint8, quality=None)
+    with tf.gfile.GFile(dest_dir + 'cat_300_300_NEAREST.jpg', 'wb') as f:
+        f.write(encoded_image.eval())
+
+    resize_300(image_data_type_float32, 1, 'NEAREST')
+    resize_300(image_data_type_float32, 2, 'BICUBIC')
+    resize_300(image_data_type_float32, 3, 'AREA')
