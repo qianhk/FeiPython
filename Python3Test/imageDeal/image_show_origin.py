@@ -44,6 +44,7 @@ with tf.Session() as sess:
     with tf.gfile.GFile(dest_dir + 'cat_compression.jpg', 'wb') as f:
         f.write(encoded_image.eval())
 
+    # 以下调整图片大小
     resize_300_300_image = tf.image.resize_images(image_data_type_float32, [300, 300], method=0)
     print(f'resize_300_300_image shape={resize_300_300_image.get_shape()}')
     resize_300_300_image_eval = resize_300_300_image.eval()
@@ -76,26 +77,79 @@ with tf.Session() as sess:
     plt.title(f'resize_image {resize_width}*{resize_height}')
     plt.show()
 
+    # 以下图片翻转
     flipped = tf.image.flip_up_down(resize_image)
     flipped2 = tf.image.flip_left_right(resize_image)
     flipped3 = tf.image.transpose_image(resize_image)
 
     plt.figure()
+    plt.title('up_down left_right transpose')  # 多子图为啥不显示整体标题
+
+    subplot_label_y = -10
 
     ax = plt.subplot(221)
-    # ax.title = 'origin'
+    ax.text(0, subplot_label_y, 'origin')
     ax.imshow(resize_image_uint8.eval())
 
     ax = plt.subplot(222)
-    # ax.title = 'up_down'
+    ax.text(0, subplot_label_y, 'up_down')
     ax.imshow(tf.image.convert_image_dtype(flipped, dtype=tf.uint8).eval())
 
     ax = plt.subplot(223)
-    # ax.title('left_right')
+    ax.text(0, subplot_label_y, 'left_right')
     ax.imshow(tf.image.convert_image_dtype(flipped2, dtype=tf.uint8).eval())
 
     ax = plt.subplot(224)
-    # ax.title('transpose')
+    ax.text(0, subplot_label_y, 'transpose')
     ax.imshow(tf.image.convert_image_dtype(flipped3, dtype=tf.uint8).eval())
+
+    plt.show()
+
+    # 以下图像色彩调整
+    adjusted = tf.image.adjust_brightness(resize_image, -0.5)
+    adjusted2 = tf.image.adjust_brightness(resize_image, +0.5)
+
+    plt.figure()
+    plt.figure(figsize=(15, 30))
+
+    ax = plt.subplot(521)
+    ax.imshow(tf.image.convert_image_dtype(adjusted, dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'brightness -0.5')
+
+    ax = plt.subplot(522)
+    ax.imshow(tf.image.convert_image_dtype(adjusted2, dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'brightness +0.5')
+
+    ax = plt.subplot(523)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_contrast(resize_image, -5), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'contrast -5')
+
+    ax = plt.subplot(524)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_contrast(resize_image, +5), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'contrast +5')
+
+    ax = plt.subplot(525)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_hue(resize_image, 0.2), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'hue +0.2')
+
+    ax = plt.subplot(526)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_hue(resize_image, 0.6), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'hue +0.6')
+
+    ax = plt.subplot(527)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_saturation(resize_image, -5), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'saturation -5')
+
+    ax = plt.subplot(528)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_saturation(resize_image, 5), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'saturation +5')
+
+    ax = plt.subplot(529)
+    ax.text(0, subplot_label_y, 'origin')
+    ax.imshow(resize_image_uint8.eval())
+
+    ax = plt.subplot(5, 2, 10)
+    ax.imshow(tf.image.convert_image_dtype(tf.image.per_image_standardization(resize_image), dtype=tf.uint8).eval())
+    ax.text(0, subplot_label_y, 'standardization')
 
     plt.show()
