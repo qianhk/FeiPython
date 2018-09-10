@@ -113,35 +113,35 @@ with tf.Session() as sess:
     plt.figure(figsize=(15, 30))
 
     ax = plt.subplot(521)
-    ax.imshow(tf.image.convert_image_dtype(adjusted, dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(adjusted, 0, 1).eval())
     ax.text(0, subplot_label_y, 'brightness -0.5')
 
     ax = plt.subplot(522)
-    ax.imshow(tf.image.convert_image_dtype(adjusted2, dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(adjusted2, 0, 1).eval())
     ax.text(0, subplot_label_y, 'brightness +0.5')
 
     ax = plt.subplot(523)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_contrast(resize_image, -5), dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(tf.image.adjust_contrast(resize_image, -5), 0, 1).eval())
     ax.text(0, subplot_label_y, 'contrast -5')
 
     ax = plt.subplot(524)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_contrast(resize_image, +5), dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(tf.image.adjust_contrast(resize_image, +5), 0, 1).eval())
     ax.text(0, subplot_label_y, 'contrast +5')
 
     ax = plt.subplot(525)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_hue(resize_image, 0.2), dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(tf.image.adjust_hue(resize_image, 0.2), 0, 1).eval())
     ax.text(0, subplot_label_y, 'hue +0.2')
 
     ax = plt.subplot(526)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_hue(resize_image, 0.6), dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(tf.image.adjust_hue(resize_image, 0.6), 0, 1).eval())
     ax.text(0, subplot_label_y, 'hue +0.6')
 
     ax = plt.subplot(527)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_saturation(resize_image, -5), dtype=tf.uint8).eval())
-    ax.text(0, subplot_label_y, 'saturation -5')
+    ax.imshow(tf.clip_by_value(tf.image.adjust_saturation(resize_image, -1), 0, 1).eval())
+    ax.text(0, subplot_label_y, 'saturation -1')
 
     ax = plt.subplot(528)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.adjust_saturation(resize_image, 5), dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(tf.image.adjust_saturation(resize_image, 5), 0, 1).eval())
     ax.text(0, subplot_label_y, 'saturation +5')
 
     ax = plt.subplot(529)
@@ -149,7 +149,7 @@ with tf.Session() as sess:
     ax.imshow(resize_image_uint8.eval())
 
     ax = plt.subplot(5, 2, 10)
-    ax.imshow(tf.image.convert_image_dtype(tf.image.per_image_standardization(resize_image), dtype=tf.uint8).eval())
+    ax.imshow(tf.clip_by_value(tf.image.per_image_standardization(resize_image), 0, 1).eval())
     ax.text(0, subplot_label_y, 'standardization')
 
     plt.show()
