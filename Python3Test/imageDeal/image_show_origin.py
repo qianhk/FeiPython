@@ -75,3 +75,27 @@ with tf.Session() as sess:
     plt.imshow(resize_image_uint8.eval())
     plt.title(f'resize_image {resize_width}*{resize_height}')
     plt.show()
+
+    flipped = tf.image.flip_up_down(resize_image)
+    flipped2 = tf.image.flip_left_right(resize_image)
+    flipped3 = tf.image.transpose_image(resize_image)
+
+    plt.figure()
+
+    ax = plt.subplot(221)
+    # ax.title = 'origin'
+    ax.imshow(resize_image_uint8.eval())
+
+    ax = plt.subplot(222)
+    # ax.title = 'up_down'
+    ax.imshow(tf.image.convert_image_dtype(flipped, dtype=tf.uint8).eval())
+
+    ax = plt.subplot(223)
+    # ax.title('left_right')
+    ax.imshow(tf.image.convert_image_dtype(flipped2, dtype=tf.uint8).eval())
+
+    ax = plt.subplot(224)
+    # ax.title('transpose')
+    ax.imshow(tf.image.convert_image_dtype(flipped3, dtype=tf.uint8).eval())
+
+    plt.show()
