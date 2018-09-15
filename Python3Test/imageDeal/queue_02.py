@@ -7,9 +7,9 @@ import threading
 import time
 
 
-def MyLoop(coord, worker_id):
+def my_loop(coord, worker_id):
     while not coord.should_stop():
-        if np.random.rand() < 0.01:
+        if np.random.rand() < 0.05:
             print(f'Stop from id: {worker_id}')
             coord.request_stop()
         else:
@@ -18,7 +18,7 @@ def MyLoop(coord, worker_id):
 
 
 coord = tf.train.Coordinator()
-threads = [threading.Thread(target=MyLoop, args=(coord, i)) for i in range(5)]
+threads = [threading.Thread(target=my_loop, args=(coord, i)) for i in range(5)]
 for t in threads:
     t.start()
 coord.join(threads)
