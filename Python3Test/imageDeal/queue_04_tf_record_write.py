@@ -12,7 +12,7 @@ num_shards = 2
 instances_per_shard = 2
 
 for i in range(num_shards):
-    filename = f'../cache/imageDetal/data.tfrecords-{i}-of-{num_shards}'
+    filename = f'../cache/imageDeal/data.tfrecords-{i}-of-{num_shards}'
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     writer = tf.python_io.TFRecordWriter(filename)
     for j in range(instances_per_shard):
