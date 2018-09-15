@@ -4,6 +4,7 @@
 import tensorflow as tf
 import os
 
+
 def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
@@ -18,7 +19,7 @@ for i in range(num_shards):
     for j in range(instances_per_shard):
         example = tf.train.Example(features=tf.train.Features(feature={
             'i': _int64_feature(i),
-            'j': _int64_feature(j)
+            'j': _int64_feature((j + 1) * 10 + i * 100)
         }))
         writer.write(example.SerializeToString())
     writer.close()
