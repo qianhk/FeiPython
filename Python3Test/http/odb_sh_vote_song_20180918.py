@@ -7,6 +7,7 @@ import time
 import os
 # import uuid
 import re
+import sys
 
 
 class Vote(object):
@@ -17,12 +18,11 @@ class Vote(object):
         self.errorResult = ''
 
     def vote(self):
-        while self.voteCount < 15:
+        while self.voteCount < 10:
             result = self.do_vote()
             if result.find('本日投票次数已满') >= 0:
                 break
             elif result.find('投票成功') >= 0:
-                print(result)
                 self.voteCount += 1
                 obj = re.search('票数：(.+?)</p>', result)
                 self.totalCount = obj.group(1)
@@ -55,7 +55,10 @@ def append_log_to_file(_filename, _msg):
 
 
 if __name__ == "__main__":
-    filename = '../logs/http/odb_sh_vote_song_' + time.strftime("%Y%m%d%H%M%S", time.localtime()) + '.txt'
+    pyfiledir = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
+    # print('python file dir:' + pyfiledir)
+    filename = pyfiledir + '../logs/http/odb_sh_vote_song_' + time.strftime("%Y%m%d%H%M%S", time.localtime()) + '.txt'
+    filename = os.path.realpath(filename)
     print('filename=' + filename)
     voteCount = 0
     try:
@@ -72,6 +75,6 @@ if __name__ == "__main__":
             if len(vote.errorResult) > 0:
                 append_log_to_file(filename, vote.errorResult)
                 break
-            time.sleep(30)
+            time.sleep(15)
     except KeyboardInterrupt:
         pass
