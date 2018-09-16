@@ -53,8 +53,16 @@ class Vote(object):
         payload = {'keyId': self.keyId, 'type': 'detail'}
         cookies = dict(systemCode='b4a53cf611e93955e79c9f5c1487992e')
         headers = {'User-Agent': USER_AGENT, 'Referer': vote_url}
-        response = requests.post(vote_url, payload, cookies=cookies, headers=headers)
-        return response.text
+
+        # noinspection PyBroadException
+        try:
+            # raise NameError('KaiTestError')
+            response = requests.post(vote_url, payload, cookies=cookies, headers=headers)
+            return response.text
+        except (TimeoutError, ConnectionError):
+            return '<title>404'
+        except:
+            return 'unknownException' + str(sys.exc_info())
 
     def do_vote_mock(self):
         if self.voteCount < 10:
