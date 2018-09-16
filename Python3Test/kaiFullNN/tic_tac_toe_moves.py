@@ -173,8 +173,7 @@ train_step = tf.train.GradientDescentOptimizer(0.025).minimize(loss)
 prediction = tf.argmax(model_output, 1)
 
 sess = tf.Session()
-init = tf.global_variables_initializer()
-sess.run(init)
+sess.run(tf.global_variables_initializer())
 
 loss_vec = []
 for i in range(10000):
@@ -211,7 +210,7 @@ def check(board):
         if board[wins[ix][0]] == board[wins[ix][1]] == board[wins[ix][2]] == 1.:
             return 1
         elif board[wins[ix][0]] == board[wins[ix][1]] == board[wins[ix][2]] == -1.:
-            return 1
+            return -1
     return 0
 
 
@@ -221,9 +220,18 @@ win_logical = False
 num_moves = 0
 while not win_logical:
     player_index = input('Input index of your move (0-8): ')
+    int_player_index = int(player_index)
+    if int_player_index < 0 or int_player_index >= 9:
+        print(f'index {int_player_index} out of range, please re input')
+        continue
+
+    if game_tracker[int_player_index] != 0:
+        print(f'index {int_player_index} has move, please re input')
+        continue
+
     num_moves += 1
     # Add player move to game
-    game_tracker[int(player_index)] = 1.
+    game_tracker[int_player_index] = 1.
 
     # Get model's move by first getting all the logits for each index
     [potential_moves] = sess.run(model_output, feed_dict={X: [game_tracker]})
@@ -237,6 +245,14 @@ while not win_logical:
     print('Model has moved')
     print_board(game_tracker)
     # Now check for win or too many moves
-    if check(game_tracker) == 1 or num_moves >= 5:
-        print('Game Over!')
+    check_result = check(game_tracker)
+    if check_result == 1 or check_result == -1 or num_moves >= 5:
+        if check_result == 1:
+            print('Game Over! X Win')
+        elif check_result == -1:
+            print('Game Over! O Win')
+        else:
+            print('Game Over!')
         win_logical = True
+
+sess.close()
