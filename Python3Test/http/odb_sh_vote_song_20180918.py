@@ -9,6 +9,14 @@ import os
 import re
 import sys
 
+# http://url.cn/5lQLOqg
+# vote_url = 'http://dev.odb.sh.cn/xsd/clientVote'
+# vote_url = 'http://httpbin.org/post'
+# vote_url = 'http://httpbin.org/cookies'
+vote_url = 'http://devjava.odb.sh.cn/xsd/clientVote'
+
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
+
 
 class Vote(object):
     def __init__(self, keyId):
@@ -18,24 +26,34 @@ class Vote(object):
         self.errorResult = ''
 
     def vote(self):
+        error_count = 0
         while self.voteCount < 10:
             result = self.do_vote()
             if result.find('本日投票次数已满') >= 0:
                 break
             elif result.find('投票成功') >= 0:
+                error_count = 0
                 self.voteCount += 1
                 obj = re.search('票数：(.+?)</p>', result)
                 self.totalCount = obj.group(1)
                 time.sleep(1)
+            elif result.find('<title>404') >= 0 or result.find('<title>502') >= 0:
+                print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ': found result has 404 or 502')
+                time.sleep(60)
             else:
-                self.voteCount += 1
                 print('未知的结果:' + result)
-                self.errorResult = result
-                break
+                error_count += 1
+                if error_count > 12:
+                    self.errorResult = result
+                    break
+                else:
+                    time.sleep(5 * 60)
 
     def do_vote(self):
         payload = {'keyId': self.keyId, 'type': 'detail'}
-        response = requests.post('http://dev.odb.sh.cn/xsd/clientVote', payload)
+        cookies = dict(systemCode='b4a53cf611e93955e79c9f5c1487992e')
+        headers = {'User-Agent': USER_AGENT, 'Referer': vote_url}
+        response = requests.post(vote_url, payload, cookies=cookies, headers=headers)
         return response.text
 
     def do_vote_mock(self):
