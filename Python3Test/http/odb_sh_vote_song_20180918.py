@@ -26,7 +26,7 @@ class Vote(object):
                 self.voteCount += 1
                 obj = re.search('票数：(.+?)</p>', result)
                 self.totalCount = obj.group(1)
-                time.sleep(3)
+                time.sleep(1)
             else:
                 self.voteCount += 1
                 print('未知的结果:' + result)
@@ -75,6 +75,6 @@ if __name__ == "__main__":
             if len(vote.errorResult) > 0:
                 append_log_to_file(filename, vote.errorResult)
                 break
-            time.sleep(15)
+            time.sleep(5)
     except KeyboardInterrupt:
         pass
