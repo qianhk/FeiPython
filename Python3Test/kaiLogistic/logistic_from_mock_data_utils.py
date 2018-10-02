@@ -48,7 +48,7 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
     max_x = max(max(class1_x), max(class2_x))
     max_y = max(max(class1_y), max(class2_y))
     accuracy = np.equal(target_series, np.round(probabilities)).astype(np.float32).mean()
-    ax.text((max_x + min_x) / 2, min_y - (max_y - min_y) / 25, f'accuracy: {accuracy * 100:.4f}%%')
+    ax.text((max_x + min_x) / 2, min_y - (max_y - min_y) / 25, f'accuracy: {accuracy * 100:.2f}%')
 
     if log_losses is not None:
         ax = plt.subplot(222)
@@ -63,7 +63,7 @@ def show_visualization_data(class1_x, class1_y, class2_x, class2_y
 
         auc = metrics.roc_auc_score(target_series, probabilities)
         # print(f'\n accuracy={accuracy * 100:.4f}%%  auc={auc:.6f}')
-        ax.text(0.6, -0.02, f'auc: {auc:.6f}')
+        ax.text(0.6, -0.02, f'auc: {auc:.4f}')
 
     # plt.legend() # 打开可开启图例显示
     plt.show()
