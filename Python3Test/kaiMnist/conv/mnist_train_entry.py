@@ -38,6 +38,7 @@ def train(mnist):
 
     cross_entroy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=tf.argmax(y_, 1))
     cross_entroy_mean = tf.reduce_mean(cross_entroy)
+    prediction = tf.nn.softmax(y)
     loss = cross_entroy_mean
     if regularizer is not None:
         loss += tf.add_n(tf.get_collection(tf.GraphKeys.LOSSES))
@@ -60,7 +61,7 @@ def train(mnist):
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
             reshaped_xs = np.reshape(xs,
                                      (BATCH_SIZE, mnist_inference.IMAGE_SIZE, mnist_inference.IMAGE_SIZE, mnist_inference.NUMBER_CHANNELS))
-            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: reshaped_xs, y_: ys})
+            _, loss_value, step, tmp_y, tmp_prediction = sess.run([train_op, loss, global_step, y, prediction], feed_dict={x: reshaped_xs, y_: ys})
             if i % 100 == 0:
                 print(f'After {step} training step(s), loss on training is {loss_value}')
                 saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME), global_step=global_step)

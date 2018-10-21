@@ -53,6 +53,7 @@ resulting_height = image_height // (max_pool_size1 * max_pool_size2)
 full1_input_size = resulting_width * resulting_height * conv2_features
 full1_weight = tf.Variable(tf.truncated_normal([full1_input_size, fully_connected_size1], stddev=0.1, dtype=tf.float32))
 full1_bias = tf.Variable(tf.truncated_normal([fully_connected_size1], stddev=0.1, dtype=tf.float32))
+
 full2_weight = tf.Variable(tf.truncated_normal([fully_connected_size1, target_size], stddev=0.1, dtype=tf.float32))
 full2_bias = tf.Variable(tf.truncated_normal([target_size], stddev=0.1, dtype=tf.float32))
 
@@ -90,7 +91,8 @@ def get_accuracy(logits, targets):
     return 100 * num_correct / batch_predictions.shape[0]
 
 
-my_optimizer = tf.train.MomentumOptimizer(learning_rate, 0.9)
+# my_optimizer = tf.train.MomentumOptimizer(learning_rate, 0.9)
+my_optimizer = tf.train.GradientDescentOptimizer(learning_rate)
 train_step = my_optimizer.minimize(loss)
 sess.run(tf.global_variables_initializer())
 
@@ -105,7 +107,7 @@ for i in range(generations):
     rand_y = train_labels[rand_index]
     train_dict = {x_input: rand_x, y_target: rand_y}
     sess.run(train_step, feed_dict=train_dict)
-    temp_train_loss, temp_train_preds = sess.run([loss, prediction], feed_dict=train_dict)
+    temp_train_loss, temp_model_ouput, temp_train_preds = sess.run([loss, model_output, prediction], feed_dict=train_dict)
     temp_train_acc = get_accuracy(temp_train_preds, rand_y)
     if (i + 1) % eval_every == 0:
         eval_index = np.random.choice(len(test_xdata), size=evaluation_size)
