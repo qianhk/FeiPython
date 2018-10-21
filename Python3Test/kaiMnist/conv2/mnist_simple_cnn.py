@@ -119,6 +119,36 @@ for i in range(generations):
         temp_test_acc = get_accuracy(test_preds, eval_y)
         train_loss.append(temp_train_loss)
         train_acc.append(temp_train_acc)
+        test_acc.append(temp_test_acc)
         acc_and_loss = [(i + 1), temp_train_loss, temp_train_acc, temp_test_acc]
         acc_and_loss = [np.round(x, 2) for x in acc_and_loss]
         print('Generation # {}. Train Loss: {:.2f}. Train Acc (Test Acc): {:.2f} ({:.2f})'.format(*acc_and_loss))
+
+eval_indices = range(0, generations, eval_every)
+plt.plot(eval_indices, train_loss, 'k-')
+plt.title('Softmax Loss per Generation')
+plt.xlabel('Generation')
+plt.ylabel('Softmax Loss')
+plt.show()
+
+plt.plot(eval_indices, train_acc, 'k-', label='Train Set Accuracy')
+plt.plot(eval_indices, test_acc, 'r--', label='Test Set Accuracy')
+plt.title('Train and Test Accuracy')
+plt.xlabel('Generation')
+plt.ylabel('Accuracy')
+plt.legend(loc='lower right')
+plt.show()
+
+actuals = rand_y[0:6]
+predictions = np.argmax(temp_train_preds, axis=1)[0:6]
+images = np.squeeze(rand_x[0:6])
+Nrows = 2
+Ncols = 3
+for i in range(6):
+    plt.subplot(Nrows, Ncols, i + 1)
+    plt.imshow(np.reshape(images[i], [28, 28]), cmap='Greys_r')
+    plt.title('Actual:' + str(actuals[i]) + ' Pred: ' + str(predictions[i]), fontsize=10)
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_visible(False)
+    frame.axes.get_yaxis().set_visible(False)
+plt.show()
