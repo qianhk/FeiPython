@@ -3,6 +3,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 import tensorflow as tf
 
 batch_size = 128
@@ -23,6 +24,9 @@ num_gens_to_wait = 250
 image_vec_length = image_height * image_width * num_channel
 record_length = 1 + image_vec_length
 
+cache_dir = '../../cache/'
+extract_folder = os.path.join(cache_dir, 'cifar-10-batches-bin')
+
 
 def read_cifar_files(filename_queue, distort_images=True):
     reader = tf.FixedLengthRecordReader(record_bytes=record_length)
@@ -41,3 +45,14 @@ def read_cifar_files(filename_queue, distort_images=True):
     return final_image, image_label
 
 
+def input_pipeline(batch_size, train_logical=True):
+    if train_logical:
+        files = [os.path.join(extract_folder, f'data_batch_{i}.bin') for i in range(1, 6)]
+    else:
+        files = [os.path.join(extract_folder, 'test_batch.bin')]
+    filename_queue = tf.train.string_input_producer(files)
+    image, label = read_cifar_files(filename_queue)
+    min_after_dequeue = 1000
+    capacity = min_after_dequeue + 3 * batch_size
+    example_batch, label_batch = tf.train.shuffle_batch([image, label], batch_size, capacity, min_after_dequeue)
+    return example_batch, label_batch
