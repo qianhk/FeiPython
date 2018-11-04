@@ -2,7 +2,6 @@
 # coding=utf-8
 
 import matplotlib.pyplot as plt
-import numpy as np
 import os
 import tensorflow as tf
 
@@ -21,11 +20,17 @@ learning_rate = 0.1
 lr_decay = 0.9
 num_gens_to_wait = 250
 
+small_step = True
+
+if small_step:
+    generations = 200
+    output_every = 5
+    eval_every = 10
+
 image_vec_length = image_height * image_width * num_channel
 record_length = 1 + image_vec_length
 
-cache_dir = '../../cache/'
-extract_folder = os.path.join(cache_dir, 'cifar-10-batches-bin')
+extract_folder = os.path.join('../../cache/', 'cifar-10-batches-bin')
 
 
 def read_cifar_files(filename_queue, distort_images=True):
@@ -73,8 +78,8 @@ def cifar_cnn_model(input_images, batch_size, train_logical=True):
         relu_conv1 = tf.nn.relu(conv1_add_bias)
 
     pool1 = tf.nn.max_pool(relu_conv1, ksize=[1, 3, 3, 1], strides=[1, 2, 2, 1], padding='SAME', name='pool_layer1')
-
     norm1 = tf.nn.lrn(pool1, depth_radius=5, bias=2.0, alpha=1e-3, beta=0.75, name='norm1')
+
     with tf.variable_scope('conv2') as scope:
         conv2_kernel = truncated_normal_var(name='conv_kernel2', shape=[5, 5, 64, 64], dtype=tf.float32)
         conv2 = tf.nn.conv2d(norm1, conv2_kernel, [1, 1, 1, 1], padding='SAME')
@@ -91,7 +96,7 @@ def cifar_cnn_model(input_images, batch_size, train_logical=True):
 
     with tf.variable_scope('full1') as scope:
         full_weight1 = truncated_normal_var(name='full_mult1', shape=[reshaped_dim, 384], dtype=tf.float32)
-        full_bias1 = zero_var(name='full_bias1', shape=[384], dtype=tf.float32)
+        full_bias1 = zero_var(name='full_bias1', shape=(384), dtype=tf.float32)
         full_layer1 = tf.nn.relu(tf.add(tf.matmul(reshaped_out, full_weight1), full_bias1))
 
     with tf.variable_scope('full2') as scope:
@@ -109,7 +114,7 @@ def cifar_cnn_model(input_images, batch_size, train_logical=True):
 
 def cifar_loss(logits, targets):
     targets = tf.squeeze(tf.cast(targets, tf.int32))
-    cross_entroy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, targets=targets)
+    cross_entroy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=targets)
     cross_entropy_mean = tf.reduce_mean(cross_entroy)
     return cross_entropy_mean
 
@@ -158,3 +163,16 @@ for i in range(generations):
         test_accuracy.append(temp_accuracy)
         print(' --- The Accuracy = {:.2f}%.'.format(100 * temp_accuracy))
 
+eval_indices = range(0, generations, eval_every)
+output_indices = range(0, generations, output_every)
+plt.plot(output_indices, train_loss, 'k-')
+plt.title('Softmax Loss per Generation')
+plt.xlabel('Generation')
+plt.ylabel('Softmax Loss')
+plt.show()
+
+plt.plot(eval_indices, test_accuracy, 'k-')
+plt.title('Test Accuracy')
+plt.xlabel('Generation')
+plt.ylabel('Accuracy')
+plt.show()
