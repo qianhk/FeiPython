@@ -151,28 +151,49 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 tf.train.start_queue_runners(sess=sess)
 
-train_loss = []
-test_accuracy = []
-for i in range(generations):
-    _, loss_value = sess.run([train_op, loss])
-    if (i + 1) % output_every == 0:
-        train_loss.append(loss_value)
-        print('Generation {}: Loss = {:.5f}'.format((i + 1), loss_value))
-    if (i + 1) % eval_every == 0:
-        [temp_accuracy] = sess.run([accuracy])
-        test_accuracy.append(temp_accuracy)
-        print(' --- The Accuracy = {:.2f}%.'.format(100 * temp_accuracy))
+# train_loss = []
+# test_accuracy = []
+# for i in range(generations):
+#     _, loss_value = sess.run([train_op, loss])
+#     if (i + 1) % output_every == 0:
+#         train_loss.append(loss_value)
+#         print('Generation {}: Loss = {:.5f}'.format((i + 1), loss_value))
+#     if (i + 1) % eval_every == 0:
+#         [temp_accuracy] = sess.run([accuracy])
+#         test_accuracy.append(temp_accuracy)
+#         print(' --- The Accuracy = {:.2f}%.'.format(100 * temp_accuracy))
+#
+# eval_indices = range(0, generations, eval_every)
+# output_indices = range(0, generations, output_every)
+# plt.plot(output_indices, train_loss, 'k-')
+# plt.title('Softmax Loss per Generation')
+# plt.xlabel('Generation')
+# plt.ylabel('Softmax Loss')
+# plt.show()
+#
+# plt.plot(eval_indices, test_accuracy, 'k-')
+# plt.title('Test Accuracy')
+# plt.xlabel('Generation')
+# plt.ylabel('Accuracy')
+# plt.show()
 
-eval_indices = range(0, generations, eval_every)
-output_indices = range(0, generations, output_every)
-plt.plot(output_indices, train_loss, 'k-')
-plt.title('Softmax Loss per Generation')
-plt.xlabel('Generation')
-plt.ylabel('Softmax Loss')
-plt.show()
+Nrows = 2
+Ncols = 3
 
-plt.plot(eval_indices, test_accuracy, 'k-')
-plt.title('Test Accuracy')
-plt.xlabel('Generation')
-plt.ylabel('Accuracy')
+for i in range(Nrows * Ncols):
+    ori_image = test_images[i]
+    uint8_image = tf.cast(ori_image, dtype=tf.uint8)
+    # float_image = tf.image.convert_image_dtype(uint8_image, dtype=tf.float32)
+    image = sess.run(uint8_image)  # (24, 24, 3)
+    label = sess.run(test_targets[i])  # (1,)
+
+    print(f'image={image} label={label}')
+
+    plt.subplot(Nrows, Ncols, i + 1)
+    plt.imshow(image)
+    plt.title(f'no.{label}', fontsize=10)
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_visible(False)
+    frame.axes.get_yaxis().set_visible(False)
+
 plt.show()
