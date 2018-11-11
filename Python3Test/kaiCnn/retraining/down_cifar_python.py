@@ -106,3 +106,15 @@ if not os.path.isdir(test_folder):
     for i in range(len(objects)):
         folder = os.path.join(test_folder, objects[i])
         os.makedirs(folder)
+    for file in test_names:
+        print(f'Saving images from file: {file}')
+        file_location = os.path.join(extract_folder, file)
+        image_dict = load_batch_from_file(file_location)
+        save_images_from_dict(image_dict, test_folder)
+
+cifar_labels_file = os.path.join(extract_folder, 'cifar10_labels.txt')
+if not os.path.exists(cifar_labels_file):
+    print(f'Write labels file, {cifar_labels_file}')
+    with open(cifar_labels_file, 'w') as labels_file:
+        for item in objects:
+            labels_file.write(f'{item}\n')
