@@ -4,6 +4,7 @@
 import os
 import numpy as np
 import sys
+import pdb
 
 # (foo)bar\1   # （x）匹配 x 并记住匹配（捕获组） \1 表示括号内的表达式
 
@@ -202,3 +203,35 @@ from collections import OrderedDict
 
 new_items = OrderedDict.fromkeys(items).keys()
 print(f'new_items={list(new_items)}')
+
+lst = [1, 3, 5, 7, 9, 13, 19, 21]
+for i in lst:
+    if i % 2 == 0:
+        print("找到了偶数")
+        break
+else:
+    print("没有找到偶数")  # 输出：没有找到偶数
+
+
+class Student(object):
+    count = 0
+
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+        self.__name = name
+        self.__score = score
+        Student.count += 1
+
+    def __getattr__(self, attr):
+        # if attr == 'name':
+        #     return "NameKaikai"
+        return 'NoAttr:' + attr
+
+
+o = Student('kaikai', 80)
+print(o.name)
+print(o.__name)
+print(o.count)
+
+# pdb.set_tarce()
