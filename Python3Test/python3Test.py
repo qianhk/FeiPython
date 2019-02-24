@@ -235,3 +235,14 @@ print(o.__name)
 print(o.count)
 
 # pdb.set_tarce()
+
+print()
+for i in range(4):
+    print("*" * (2 * i + 1))  # Python 的字符串乘法会将字符串重复 n 次
+
+print()
+for i in range(4):
+    if i in [0, 3]:
+        print("*********")
+    else:
+        print("*       *")
