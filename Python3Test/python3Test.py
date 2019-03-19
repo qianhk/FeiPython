@@ -246,3 +246,18 @@ for i in range(4):
         print("*********")
     else:
         print("*       *")
+
+print('如何将字符串常量转为变量？')
+list1 = ['A', 'B', 'C', 'D']
+# for i in list1:
+#     exec(f"{i} = ['{i}']")
+# exec('print(A)')
+# print(B)
+
+for i in list1:
+    globals()[i] = [i, i]
+exec('print(A)')
+print(B)
+
+print(globals())
+print(locals())
