@@ -9,12 +9,13 @@ import shutil
 import re
 
 MODIFY_FILE_SUFFIX = {'.h', '.m', '.mm'}
-IGNORE_DIR_SUFFIX = {'.xcworkspace', '.xcodeproj'}
-IGNORE_DIR = {'Pods'}
+
+IGNORE_DIR_SUFFIX = {'.xcworkspace', '.xcodeproj', '.xcassets', '.xcdatamodeld'}
+IGNORE_DIR = {'Pods', 'PodMainDependencies'}
 
 
 def add_ok_file_to_list(dest_files, dir):
-    print(f'will list dir: {dir}')
+    # print(f'will list dir: {dir}')
     try:
         inner_dir = os.listdir(dir)
     except:
@@ -26,15 +27,15 @@ def add_ok_file_to_list(dest_files, dir):
             if base_name[0] == '.':
                 continue
             suffix = os.path.splitext(path)[1]
-            # print(f'base_name={base_name} suffix={suffix}')
+            # print(f'base_name={base_name} suffix={suffix}')  # (xx/a.txt:a.txt:.txt xxx/Pods:Pods: xxx/.txt:.txt:
             if os.path.isfile(path):
-                # os.sub
                 if suffix in MODIFY_FILE_SUFFIX:
-                    print(f'file: {path}')
+                    # print(f'file: {path}')
                     dest_files.append(path)
             else:
                 if base_name not in IGNORE_DIR and suffix not in IGNORE_DIR_SUFFIX:
-                    print(f'dir: {path}')
+                    # print(f'dir: {path}')
+                    add_ok_file_to_list(dest_files, path)
 
     # for dir_path, subpaths, files in os.walk(dir): //不需要的路径也遍历了
     #     for file in files:
@@ -43,9 +44,11 @@ def add_ok_file_to_list(dest_files, dir):
 
 
 def replace_public_h_file(framework, dest_dirs):
-    print(f'will replace_public_h_file {framework} {dest_dirs}')
+    print(f'will replace public .h file, framework name: {framework}')
     dest_files = []
     for dest_dir in dest_dirs:
+        dest_dir = os.path.abspath(dest_dir)
+        print(f'search files in {dest_dir}')
         add_ok_file_to_list(dest_files, dest_dir)
     return dest_files
 
@@ -138,21 +141,23 @@ if __name__ == '__main__':
     # print(f'sys.argv={sys.argv}\nargs={args}\nunparsed={unparsed}\nargs.pbxproj={args.pbxproj}\nargs.replacedir={args.replacedir}')
     print(f'pbxproj={args.pbxproj} framwork={args.framework} replacedir={args.replacedir}')
 
-    exist = os.path.isfile(args.pbxproj)
+    pbxproj = os.path.abspath(args.pbxproj)
+    exist = os.path.isfile(pbxproj)
     if exist:
-        # print(f'File "{args.pbxproj}" exists.')
-        if os.access(args.pbxproj, os.R_OK):
-            public_list = parse_pubic_h_file(args.pbxproj)
+        # print(f'File "{pbxproj}" exists.')
+        if os.access(pbxproj, os.R_OK):
+            public_list = parse_pubic_h_file(pbxproj)
             if len(public_list) > 0:
-                print(f'found {len(public_list)} public .h file')
+                print(f'found {len(public_list)} public .h file in {pbxproj}')
                 dest_files = replace_public_h_file(args.framework, args.replacedir)
                 if len(dest_files) > 0:
-                    print(f'found dest_files: {dest_files}')
+                    print(f'found {len(dest_files)} files need to be replace')
+                    # print(f'found {len(dest_files)} files, dest_files: {dest_files}')
                 else:
-                    print(f'not found dest files to be replaced.')
+                    print(f'not found dest files to be replace.')
             else:
                 print(f'public .h config not found.')
         else:
-            print(f'File "{args.pbxproj}" is not accessible to read')
+            print(f'File "{pbxproj}" is not accessible to read')
     else:
-        print(f'File "{args.pbxproj}" not exists or is directory')
+        print(f'File "{pbxproj}" not exists or is directory')
