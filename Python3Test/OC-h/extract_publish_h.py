@@ -113,17 +113,34 @@ def parse_pubic_h_file(pbxproj):
 #         # os.system(f'sed s/{h_name}/<{framework}>/g')
 
 
-def modify_files_import(dest_files, framework, public_list):
+def modify_files_import2(dest_files, framework, public_list):
     sed_cmds = []
     for h_name in public_list:
         sed_cmd = """sed -i '' 's/\"{h_name}\"/<{frame}\/{h_name}>/g'""".format(h_name=h_name, frame=framework)
         # print(sed_cmd)
         sed_cmds.append(sed_cmd)
+    count = 0
     for file in dest_files:
         for sed_cmd in sed_cmds:
             full_sed_cmd = '{} "{}"'.format(sed_cmd, file)
-            # print(full_sed_cmd)
-            os.system(full_sed_cmd)
+            count += 1
+            print(full_sed_cmd)
+            # os.system(full_sed_cmd)
+    print(f'total replace {count} times')
+
+
+def modify_files_import(dest_files, framework, public_list):
+    sed_cmd = "sed -i ''"
+    for h_name in public_list:
+        sed_cmd += """ -e 's/\"{h_name}\"/<{frame}\/{h_name}>/g'""".format(h_name=h_name, frame=framework)
+        # print(sed_cmd)
+    count = 0
+    for file in dest_files:
+        full_sed_cmd = '{} "{}"'.format(sed_cmd, file)
+        count += 1
+        # print(full_sed_cmd)
+        os.system(full_sed_cmd)
+    print(f'total replace {count} times')
 
 
 if __name__ == '__main__':
