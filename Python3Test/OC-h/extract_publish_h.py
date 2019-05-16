@@ -43,7 +43,7 @@ def add_ok_file_to_list(dest_files, dir):
     #         print(f'{path}')
 
 
-def replace_public_h_file(framework, dest_dirs):
+def get_replace_public_h_files(framework, dest_dirs):
     print(f'will replace public .h file, framework name: {framework}')
     dest_files = []
     for dest_dir in dest_dirs:
@@ -99,6 +99,33 @@ def parse_pubic_h_file(pbxproj):
         return public_list
 
 
+# def modify_file_import(path, framework, public_list):
+#     print(f'modify file import: {path}')
+#     # try:
+#     #     with open(path, 'wt') as reader:
+#     #         pass
+#     # except:
+#     #     print(f"modify file import '{path}': Unexpected error: {sys.exc_info()[0]}")
+#     # os.system(f'cat {path}')
+#     for h_name in public_list:
+#         sed_cmd = """\"{h_name}\"""".format(h_name=h_name, )
+#         print(sed_cmd)
+#         # os.system(f'sed s/{h_name}/<{framework}>/g')
+
+
+def modify_files_import(dest_files, framework, public_list):
+    sed_cmds = []
+    for h_name in public_list:
+        sed_cmd = """sed -i '' 's/\"{h_name}\"/<{frame}\/{h_name}>/g'""".format(h_name=h_name, frame=framework)
+        # print(sed_cmd)
+        sed_cmds.append(sed_cmd)
+    for file in dest_files:
+        for sed_cmd in sed_cmds:
+            full_sed_cmd = '{} "{}"'.format(sed_cmd, file)
+            # print(full_sed_cmd)
+            os.system(full_sed_cmd)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='extract public .h file in project.pbxproj')
     parser.add_argument(
@@ -148,11 +175,16 @@ if __name__ == '__main__':
         if os.access(pbxproj, os.R_OK):
             public_list = parse_pubic_h_file(pbxproj)
             if len(public_list) > 0:
+                # public_list = public_list[:1]  # for test
                 print(f'found {len(public_list)} public .h file in {pbxproj}')
-                dest_files = replace_public_h_file(args.framework, args.replacedir)
+                dest_files = get_replace_public_h_files(args.framework, args.replacedir)
                 if len(dest_files) > 0:
                     print(f'found {len(dest_files)} files need to be replace')
                     # print(f'found {len(dest_files)} files, dest_files: {dest_files}')
+                    # dest_files = ['/the/path/to/file.m', '/the/path/to/file.h']
+                    # dest_files = dest_files[:5]  # for test
+                    modify_files_import(dest_files, args.framework, public_list)
+                    print(f'Done.')
                 else:
                     print(f'not found dest files to be replace.')
             else:
