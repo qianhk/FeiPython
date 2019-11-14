@@ -6,6 +6,7 @@ import os
 import json
 import click
 import csv
+import sys
 
 
 # from pathlib import Path
@@ -14,13 +15,20 @@ import csv
 def get_id_list_from_local_file(ori_json_file):
     # path = Path(ori_json_file)
     ori_json_file = os.path.normpath(ori_json_file)
-    number_id_list = []
-    with open(ori_json_file, 'r') as f:
-        json_data_list = json.load(f)
-        # print(json_data_list)
-        for item_dic in json_data_list:
-            number_id_list.append(item_dic['iid'])
-    return number_id_list
+    try:
+        number_id_list = []
+        with open(ori_json_file, 'r') as f:
+            json_data_list = json.load(f)
+            # print(json_data_list)
+            for item_dic in json_data_list:
+                number_id_list.append(item_dic['iid'])
+        return number_id_list
+    except:
+        info = sys.exc_info()[0]
+        click.echo(f'open file ({ori_json_file}) Unexpected error: ', nl=False)  # This will prevent the secho statement from starting a new line
+        click.secho(f'{info}', fg='red')
+        # click.secho(f"open file ({ori_json_file}) Unexpected error: {sys.exc_info()[0]}", fg='red')
+        return None
 
 
 def get_vid_from_net(base_url, numberId):
@@ -37,11 +45,24 @@ def get_vid_from_net(base_url, numberId):
 
 
 @click.command()
-@click.option("--ori", help="local number id json file")
 @click.option("--base-url", help="base url")
-def convert_id_to_vid(ori, base_url):
-    print(f'ori={ori} base_url={base_url}')
-    id_list = get_id_list_from_local_file(ori)
+@click.option('--mode', type=click.Choice(['read-only', 'read-write']))
+@click.option('--env-value', envvar='DEVELOPER_DIR', type=click.STRING)
+@click.argument("local-json", type=click.Path(exists=False))
+@click.argument("local-json2", type=click.Path(exists=False))
+@click.argument('foo', nargs=-1, required=False)
+def convert_id_to_vid(local_json, base_url, local_json2, mode, env_value, foo):
+    print(f'local_json={local_json} base_url={base_url}')
+    print(f'local_json2={local_json2}')
+    click.echo(f'mode={mode}')
+    click.echo(f'env_value={env_value}')
+    click.echo(f'foo={foo}')
+    click.secho(local_json2, fg='green')
+    click.echo(click.format_filename(local_json2), color='blue')
+    id_list = get_id_list_from_local_file(local_json)
+    if id_list is None:
+        return
+
     print(f'id_list length = {len(id_list)}')
 
     # with open('../cache/vid.csv', 'w') as csv_file:
@@ -56,12 +77,13 @@ def convert_id_to_vid(ori, base_url):
     with open('../cache/vid.csv', 'w') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(['vid', 'title'])
-        # vid_title = get_vid_from_net(base_url, id_list[0])
-        # writer.writerow(vid_title)
+        vid_title = get_vid_from_net(base_url, id_list[0])
+        writer.writerow(vid_title)
+        print(vid_title)
         # writer.writerow([s.encode("utf-8") for s in vid_title])
-        for number_id in id_list:
-            vid_title = get_vid_from_net(base_url, number_id)
-            writer.writerow(vid_title)
+        # for number_id in id_list:
+        #     vid_title = get_vid_from_net(base_url, number_id)
+        #     writer.writerow(vid_title)
 
     print('Done.')
 
