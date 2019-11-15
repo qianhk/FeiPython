@@ -261,3 +261,8 @@ print(B)
 
 print(globals())
 print(locals())
+
+sales_north = [350, 653, 882, 100]
+sales_south = [551, 502, 976, 20]
+for s1, s2 in zip(sales_north, sales_south):
+    print(f'zip:{s1 - s2}')
