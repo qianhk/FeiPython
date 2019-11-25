@@ -45,13 +45,29 @@ def get_vid_from_net(base_url, numberId):
 
 
 @click.command()
-@click.option("--base-url", help="base url")
+@click.option("--base-url", "-u", "base_url2", help="base url")
 @click.option('--mode', type=click.Choice(['read-only', 'read-write']))
 @click.option('--env-value', envvar='DEVELOPER_DIR', type=click.STRING)
 @click.argument("local-json", type=click.Path(exists=False))
 @click.argument("local-json2", type=click.Path(exists=False))
 @click.argument('foo', nargs=-1, required=False)
-def convert_id_to_vid(local_json, base_url, local_json2, mode, env_value, foo):
+# @click.option('-n', default=1)
+# @click.option('--message', '-m', multiple=True)
+# @click.option('-v', '--verbose', count=True)
+# @click.option('--shout', is_flag=True)
+# @click.option('--shout/--no-shout', default=False)
+# @click.option('/debug;/no-debug') #在 Windows 中，一个选项可以以 / 开头，这样就会真假选项的分隔符冲突了，这个时候可以使用 ; 进行分隔：
+# @click.option('--upper', 'transformation', flag_value='upper', default=True)
+# @click.option('--lower', 'transformation', flag_value='lower')
+# @click.option('--hash-type', type=click.Choice(['MD5', 'SHA1'], case_sensitive=False))
+# @click.option('--name', prompt=True)
+# @click.password_option()
+# @click.option('--count', type=click.IntRange(0, None, clamp=True))
+# @click.option('--digit', type=click.IntRange(0, 10))
+# @click.option('--yes', is_flag=True, callback=abort_if_false, expose_value=False, prompt='Are you sure you want to drop the db?')
+# @click.confirmation_option(prompt='Are you sure you want to drop the db?')
+def convert_id_to_vid(local_json, base_url2, local_json2, mode, env_value, foo):
+    base_url = base_url2
     print(f'local_json={local_json} base_url={base_url}')
     print(f'local_json2={local_json2}')
     click.echo(f'mode={mode}')
