@@ -110,3 +110,5 @@ logs/
 
 *debug*
 
+demo_bokeh_*.html
+
