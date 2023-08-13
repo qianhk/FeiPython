@@ -112,3 +112,5 @@ logs/
 
 demo_bokeh_*.html
 
+.DS_Store
+.idea/
